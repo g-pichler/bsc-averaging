@@ -1,0 +1,6 @@
+{
+  "challenge_module": "Submission.MO285151.Challenge",
+  "solution_module": "Submission.MO285151.Solution",
+  "theorem_names": ["BSCAveraging.MO285151.averaged_bsc_maximise_mutual_information"],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

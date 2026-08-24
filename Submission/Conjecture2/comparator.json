@@ -1,0 +1,6 @@
+{
+  "challenge_module": "Submission.Conjecture2.Challenge",
+  "solution_module": "Submission.Conjecture2.Solution",
+  "theorem_names": ["BSCAveraging.DSIB.conjecture2_p0"],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

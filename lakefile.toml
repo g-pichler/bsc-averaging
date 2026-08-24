@@ -1,0 +1,22 @@
+name = "BSCAveraging"
+version = "1.0.0"
+defaultTargets = ["BSCAveraging", "Submission"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+# Pinned to the mathlib release tag `v4.32.2` (commit 905b95818e), which is
+# built with Lean v4.32.2 — keep this in sync with `lean-toolchain`.
+rev = "905b95818eb32af7874a58b427f50c1711a5e96c"
+
+# The development: MathOverflow 285151 and the two `p = 0` conjectures of
+# Dikshtein-Ordentlich-Shamai, Entropy 24(9):1321.
+[[lean_lib]]
+name = "BSCAveraging"
+
+# The Palomar Challenge/Solution pairs.  Each Challenge is self-contained and
+# imports Mathlib only; each Solution imports `BSCAveraging` and discharges the
+# corresponding Challenge statement.
+[[lean_lib]]
+name = "Submission"
+globs = ["Submission.+"]
