@@ -96,7 +96,7 @@ automation:
 review:
   status: self-assessed
   notes: |-
-    The author checked the Challenge statements against the cited sources
+    The author checked the three Challenge statements against the cited sources
     and reviewed the proof architecture; no separate reviewer was involved. Mechanical checks
     performed before submission: `lake build` of the whole development, and `#print axioms` for
     every theorem on the proof path (`BSCAveraging/Basic.lean`).

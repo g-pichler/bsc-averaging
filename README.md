@@ -201,9 +201,10 @@ the project happens to contain.
 
 Each `Challenge.lean` is self-contained over Mathlib: it repeats verbatim the
 definitions its statement needs and states the theorem with `sorry`. Each
-`Solution.lean` imports the one library module it needs — `BSCAveraging.Main`
-and `BSCAveraging.Conj2` respectively — and discharges it. The Challenge module
-documentation carries the mathematical account of that one result.
+`Solution.lean` imports the one library module it needs — `BSCAveraging.Main`,
+`BSCAveraging.CFinish` and `BSCAveraging.Conj2` respectively — and discharges it.
+The Challenge module documentation carries the mathematical account of that one
+result.
 
 ## Licence
 

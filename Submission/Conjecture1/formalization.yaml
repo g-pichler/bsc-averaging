@@ -86,11 +86,11 @@ automation:
   tool_setup: |-
     The Lean sources were produced by an AI coding agent working under the
     author's direction, with the author reviewing the statements and the overall proof
-    architecture. `BSCAveraging/NOTES.md` is the working log kept during that process, organised
+    architecture. `BSCAveraging/Exploration/NOTES.md` is the working log kept during that process, organised
     by attempted route rather than by the final argument; many routes recorded there were refuted
     and are retained for that reason. `BSCAveraging/Exploration/` holds results that were proved
     along the way but are not used by any of the three theorems. Supporting numerical exploration
-    is in `BSCAveraging/numerics/` (Python; not part of any proof). Costs, hardware and wall time
+    is in `BSCAveraging/Exploration/numerics/` (Python; not part of any proof). Costs, hardware and wall time
     were not recorded.
 
 review:
