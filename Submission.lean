@@ -5,6 +5,7 @@ Each subdirectory holds one Challenge together with its Comparator
 configuration and its `formalization.yaml`:
 
 * `Submission/MO285151/`    — MathOverflow 285151, `conv 𝒜 = conv ℬ`;
+* `Submission/Conjecture1/` — Dikshtein-Ordentlich-Shamai, Conjecture 1 (`p = 0`);
 * `Submission/Conjecture2/` — Dikshtein-Ordentlich-Shamai, Conjecture 2 (`p = 0`).
 
 Each Challenge is self-contained over Mathlib: it repeats verbatim the

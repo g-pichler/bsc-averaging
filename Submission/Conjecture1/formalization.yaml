@@ -32,7 +32,7 @@ project:
     `averaged_bsc_maximise_mutual_information` and `conjecture2_p0_holds` depend only on `propext`,
     `Classical.choice` and `Quot.sound`. `conjecture1_p0_holds` additionally depends on exactly one
     further axiom: the 24129-monomial Polya certificate of its kernel lemma is checked by
-    `native_decide`, which on Lean v4.32.0 mints a per-declaration auxiliary axiom
+    `native_decide`, which on Lean v4.32.2 mints a per-declaration auxiliary axiom
     (BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1) rather than citing
     `Lean.ofReduceBool`; that auxiliary axiom is a custom axiom in Comparator's sense. The other
     computed step of that proof, a 650-cell interval sweep, is checked by the Lean kernel and adds
@@ -76,7 +76,7 @@ project:
 
 classification:
   arxiv: [cs.IT, math.IT]
-  msc2020: [94A17, 94A15, 94A40, 52A40]
+  msc2020: [94A17, 94A15, 94A40, 94A34, 26D07]
 
 automation:
   methods:
@@ -86,54 +86,49 @@ automation:
   tool_setup: |-
     The Lean sources were produced by an AI coding agent working under the
     author's direction, with the author reviewing the statements and the overall proof
-    architecture. `BSCAveraging/Exploration/NOTES.md` is the working log kept during that process, organised
+    architecture. `BSCAveraging/NOTES.md` is the working log kept during that process, organised
     by attempted route rather than by the final argument; many routes recorded there were refuted
     and are retained for that reason. `BSCAveraging/Exploration/` holds results that were proved
     along the way but are not used by any of the three theorems. Supporting numerical exploration
-    is in `BSCAveraging/Exploration/numerics/` (Python; not part of any proof). Costs, hardware and wall time
+    is in `BSCAveraging/numerics/` (Python; not part of any proof). Costs, hardware and wall time
     were not recorded.
 
 review:
   status: self-assessed
   notes: |-
-    The author checked the Challenge statements against the cited sources
+    The author checked the three Challenge statements against the cited sources
     and reviewed the proof architecture; no separate reviewer was involved. Mechanical checks
     performed before submission: `lake build` of the whole development, and `#print axioms` for
     every theorem on the proof path (`BSCAveraging/Basic.lean`).
 
 scope: |-
   This configuration selects one theorem,
-  BSCAveraging.MO285151.averaged_bsc_maximise_mutual_information: conv(regionA p) = conv(regionB p)
-  for every p in [0,1]. Binary channels on both sides, as in the source question, which costs
-  nothing: Conjecture 5.2 is stated for S_i, itself defined with |U| <= |X| and |V| <= |Y|, and
-  Proposition 4.3 of that paper gives conv(S_i) = conv(R_i). Known gaps: p = 0 and p = 1/2 were
-  already settled in the literature and are reproved rather than established, so the new content
-  is p in (0,1/2) union (1/2,1). The regions are stated in nats. The
-  Challenge departs deliberately from the source question's rate constraints, as recorded in the
-  source note and in the Challenge module documentation.
+  BSCAveraging.DSIB.conjecture1_p0. Known gaps and restrictions: (i) p = 0 only, the only case
+  the paper's Conjecture 1 states; (ii) binary U and V, the cardinality reduction being cited
+  (Dikshtein-Ordentlich-Shamai Proposition 3, Pichler-Piantanida-Matz Proposition 4.3) and not
+  formalized; (iii) value form, not uniqueness of the maximiser; (iv) the theorem depends on one
+  further axiom, minted by the native_decide check of the 24129-monomial Polya certificate in
+  BSCAveraging/KernelCertFast.lean. On Lean v4.32.2 that is a per-declaration auxiliary axiom,
+  BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1, which Comparator rejects as a
+  custom axiom, so this configuration does not meet Palomar's permitted-axiom rule until the
+  certificate is checked by the Lean kernel instead.
 
 sources:
-  - title: "Convex hulls of the achievable rate regions for a doubly symmetric binary source coincide: conv A = conv B for every p in [0,1]"
+  - title: "Conjecture 1 of Dikshtein-Ordentlich-Shamai holds at p = 0 for binary test channels: no admissible pair exceeds the Z-channel/S-channel value"
     type: original-proof
     relationship: other
     note: |-
-      First presentation of the result. The question it answers was posed in 2017 and had no answer; see the MathOverflow entry below.
-  - title: "Do averaged binary symmetric channels maximize mutual information?"
-    type: "web discussion"
+      First presentation of the result. The conjecture was published in 2022 with numerical evidence only.
+  - title: "The Double-Sided Information Bottleneck Function"
+    type: paper
     relationship: background
-    url: https://mathoverflow.net/questions/285151/do-averaged-binary-symmetric-channels-maximize-mutual-information
+    url: https://doi.org/10.3390/e24091321
     authors:
-      - "Georg Pichler"
+      - "Michael Dikshtein"
+      - "Or Ordentlich"
+      - "Shlomo Shamai (Shitz)"
     note: |-
-      Poses the question answered here. Asked 2017-11-03, no answers as of this submission. The question writes the two rate constraints of B as R1 >= 1 - H(a*p) and R2 >= 1 - H(b*p); that is a slip, and the consistent version R1 >= 1 - H(a), R2 >= 1 - H(b) is what is formalized. The Challenge module documents this departure.
-  - title: "Do binary symmetric channels maximize mutual information?"
-    type: "web discussion"
-    relationship: background
-    url: https://mathoverflow.net/questions/213084/do-binary-symmetric-channels-maximize-mutual-information
-    authors:
-      - "Georg Pichler"
-    note: |-
-      The predecessor question, which asked for A = B without convex hulls and received a counterexample at p = 0. It shows why the hull is essential and does not settle the present question.
+      Entropy 24(9):1321 (2022). States Conjecture 1, proved here at p = 0 in value form. Its Proposition 3 is the cardinality reduction to binary test channels that the Lean statement assumes and does not formalize.
   - title: "Distributed Information-Theoretic Clustering"
     type: paper
     relationship: background
@@ -143,4 +138,4 @@ sources:
       - "Pablo Piantanida"
       - "Gerald Matz"
     note: |-
-      Information and Inference 11 (2022) 1029-1082. Its Conjecture 5.2 is the same statement (conv of the inner bound equals conv of the outer bound for a DSBS), so the theorem settles it too.
+      Information and Inference 11 (2022). Its Proposition 4.3 is the second reference for the cardinality reduction to binary U and V.

@@ -110,12 +110,6 @@ scope: |-
   I(U;V) is the paper's own Remark 5; it is cited, not formalized. The theorem itself uses no computed step: its
   axioms are exactly propext, Classical.choice and Quot.sound.
 
-  Conjecture 1 of the same paper is also proved in this repository
-  (BSCAveraging.conjecture1_p0_holds) and is described in the abstract above, but it has no
-  Comparator configuration on this commit: its Polya certificate is checked by native_decide,
-  so the theorem carries an auxiliary axiom that Comparator rejects. Only the configurations
-  present here are offered for registration.
-
 sources:
   - title: "Conjecture 2 of Dikshtein-Ordentlich-Shamai holds at p = 0 for binary test channels: no admissible pair undercuts the Z/Z value"
     type: original-proof
