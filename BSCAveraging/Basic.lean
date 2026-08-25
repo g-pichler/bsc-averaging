@@ -83,7 +83,7 @@ Everything here is `sorry`-free.  `averaged_bsc_maximise_mutual_information`,
 `Classical.choice`, `Quot.sound`.  `conjecture1_p0_holds` additionally depends
 on exactly one further axiom, reached through `saddle_iii`: the 24129-monomial
 Pólya expansion of the kernel lemma, whose coefficient check runs under
-`native_decide`.  On Lean v4.32.2 `native_decide` mints a *per-declaration
+`native_decide`.  On Lean v4.32.0 `native_decide` mints a *per-declaration
 auxiliary axiom* rather than citing `Lean.ofReduceBool`, so the axiom report
 names it `BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1`.  The other computed step, the 650-cell interval sweep of
 regime 2 of the core, is checked by the **kernel** (`CoreSweep.lean`).

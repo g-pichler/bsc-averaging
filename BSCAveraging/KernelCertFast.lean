@@ -18,7 +18,7 @@ coefficient a positive integer.  `PE.eval_nonneg_of_norm` (proved in
 inequality.
 
 Cost of the check: one `native_decide`, i.e. compiled integer arithmetic.  That
-adds one axiom to this file — on Lean v4.32.2 `native_decide` mints a
+adds one axiom to this file — on Lean v4.32.0 `native_decide` mints a
 per-declaration auxiliary axiom, here
 `kerQPE_allNonneg._native.native_decide.ax_1_1`, rather than citing
 `Lean.ofReduceBool`.  The rest of the development

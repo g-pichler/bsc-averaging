@@ -5,9 +5,11 @@ defaultTargets = ["BSCAveraging", "Submission"]
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
-# Pinned to the mathlib release tag `v4.32.2` (commit 905b95818e), which is
-# built with Lean v4.32.2 — keep this in sync with `lean-toolchain`.
-rev = "905b95818eb32af7874a58b427f50c1711a5e96c"
+# Pinned to the mathlib release tag `v4.32.0` (commit 81a5d257c8), which is
+# built with Lean v4.32.0 — keep this in sync with `lean-toolchain`.  The tag is
+# on `master`; the patch tags `v4.32.1` and `v4.32.2` are release-branch commits
+# and are not ancestors of `master`, which Comparator rejects.
+rev = "81a5d257c8e410db227a6665ed08f64fea08e997"
 
 # The development: MathOverflow 285151 and the two `p = 0` conjectures of
 # Dikshtein-Ordentlich-Shamai, Entropy 24(9):1321.

@@ -111,7 +111,7 @@ Stated once, for all three results.
   here** — the Lean statement is the minimization form directly.
 * **One `native_decide` axiom in result 2.** `conjecture1_p0_holds` reaches
   `native_decide` through the 24129-monomial Pólya certificate of its kernel
-  lemma (`BSCAveraging/KernelCertFast.lean`). On Lean v4.32.2 `native_decide`
+  lemma (`BSCAveraging/KernelCertFast.lean`). On Lean v4.32.0 `native_decide`
   mints a per-declaration auxiliary axiom rather than citing
   `Lean.ofReduceBool`, so the axiom report names
   `BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1`. The other computed step of that

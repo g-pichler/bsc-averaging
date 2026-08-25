@@ -78,7 +78,7 @@ All `sorry`-free.  Every theorem depends only on `propext`, `Classical.choice`
 and `Quot.sound`, with a single exception: `conjecture1_p0_holds` additionally
 depends on one further axiom, because the Pólya certificate of the kernel lemma
 (`KernelCertFast.lean`, 24129 monomials) is checked by `native_decide`.  On Lean
-v4.32.2 that mints a per-declaration auxiliary axiom, `BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1`, rather than
+v4.32.0 that mints a per-declaration auxiliary axiom, `BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1`, rather than
 citing `Lean.ofReduceBool`.
 All of this is checked by `#print axioms` in `Basic.lean`.
 
@@ -107,7 +107,7 @@ theorem.  Everything unmarked is on the proof path.
 | its analytic core: `K(z) = 1 − artanh z/z + z·artanh z` is increasing | `KStepFun_strictMonoOn`, `lt_one_add_sq_mul_artanh` |
 | `f_e(δPQ)` is strictly supermodular in `(P,Q)` | `fe_mul_supermodular` |
 | the regions and their hulls are closed | `isClosed_regionA`, `isClosed_convexHull_regionA`, `isClosed_convexHull_regionB` |
-| **`conv` of a compact set in `ℝ³` is compact** (absent from Mathlib v4.32.2) | `isCompact_convexHull` |
+| **`conv` of a compact set in `ℝ³` is compact** (absent from Mathlib v4.32.0) | `isCompact_convexHull` |
 | `ℬ` contains the orthant `{R₀ ≤ 0, R₁ ≥ 0, R₂ ≥ 0}` | `orthant_subset_regionB` |
 | the conjecture ⟺ `𝒜 ⊆ conv ℬ` | `averagedBSCConjecture_iff` |
 | at `p = 1/2`, `I(U;V) = 0` for *every* channel pair | `mutualInfo_jointUV_half` |
@@ -234,7 +234,7 @@ is the last file of the Entropy 24(9):1321 chain.
 | `BiasCoords.lean` | the bias parametrisation: `I(U;X) = Σ π_u f_e(s_u)`, the kernel identity `P(u,v) = π_u ρ_v (1 + δ s_u t_v)`, and `I(U;V) = Σ π_u ρ_v f(δ s_u t_v)` |
 | `FixedPoint.lean` | **the two-point theorem** `lagrTwoPoint_le_of_corner_bounds_closed` |
 | `Bridge.lean` | mean-zero forces `π_false = b/(a+b)`, matching the weights built into `lagrTwoPoint` |
-| `Closedness.lean` | the regions are closed; `isCompact_convexHull` (absent from Mathlib v4.32.2), proved via Carathéodory |
+| `Closedness.lean` | the regions are closed; `isCompact_convexHull` (absent from Mathlib v4.32.0), proved via Carathéodory |
 | `Assembly.lean` | bridge ⟹ domination ⟹ Hahn–Banach separation ⟹ the MO conjecture |
 | `BestResponse.lean` | the one-sided LP dual: a certificate `φ_T(s) ≤ λ₀+λ₁s+λ₂f_e(s)` bounds `I(U;V)` for **every** channel on that side (`NOTES.md` §7) |
 | `PZero.lean` | the `p = 0` certificates, both signs: the Z-channel is a global best response to the S-channel for the **max** (Conj 1) and the **min** (Conj 2) |

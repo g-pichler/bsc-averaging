@@ -167,7 +167,7 @@ theorem convexHull_eq_combMap_image {S : Set (ℝ × ℝ × ℝ)} (hS : S.Nonemp
     exact combMap_mem_convexHull hw hz
 
 /-- **Convex hull of a compact set in `ℝ³` is compact.**  Missing from Mathlib
-v4.32.2, supplied here. -/
+v4.32.0, supplied here. -/
 theorem isCompact_convexHull {S : Set (ℝ × ℝ × ℝ)} (hS : IsCompact S) :
     IsCompact (convexHull ℝ S) := by
   rcases S.eq_empty_or_nonempty with rfl | hne

@@ -3317,7 +3317,7 @@ theorem isClosed_regionB (p : ℝ) : IsClosed (regionB p) := by
 
 /-! ## Convex hulls of compact sets in `ℝ³`
 
-Mathlib (v4.32.2) has only `Set.Finite.isCompact_convexHull`; the general
+Mathlib (v4.32.0) has only `Set.Finite.isCompact_convexHull`; the general
 finite-dimensional statement is missing.  We supply it for `ℝ³` by the standard
 Carathéodory route: every point of `convexHull S` is a convex combination of at
 most `4` points of `S`, so

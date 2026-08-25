@@ -2373,7 +2373,7 @@ having no topology.
 
 **The hulls are closed too.**  The separation step needs `conv ℬ` closed, which
 follows from `conv` of a compact set in `ℝ³` being compact.  That is **absent
-from Mathlib v4.32.2** (only `Set.Finite.isCompact_convexHull`;
+from Mathlib v4.32.0** (only `Set.Finite.isCompact_convexHull`;
 `Mathlib.Analysis.Convex.Normed` does not exist there), so it is supplied here:
 
 ```
