@@ -65,14 +65,21 @@ noncomputable def bsc (a : ℝ) (ha0 : 0 ≤ a) (ha1 : a ≤ 1) : Chan where
 
 @[simp] lemma bsc_tr (a : ℝ) (ha0 : 0 ≤ a) (ha1 : a ≤ 1) : (bsc a ha0 ha1).tr = bscTr a := rfl
 
-/-- The completely useless channel (crossover `1/2`). -/
-noncomputable def uselessChan : Chan := bsc (1 / 2) (by norm_num) (by norm_num)
-
 /-! ## The doubly symmetric binary source -/
 
 /-- Joint pmf of a doubly symmetric binary source with parameter `p`:
 `X, Y ~ Bernoulli(1/2)` and `P(X ≠ Y) = p`. -/
 noncomputable def dsbs (p : ℝ) (x y : Bool) : ℝ := if x = y then (1 - p) / 2 else p / 2
+
+/-- The completely useless channel (crossover `1/2`).  Declared after `dsbs`
+deliberately: Lean lifts the `Nat.AtLeastTwo` instance of the literal `2` into
+an auxiliary proof named after the *first* declaration of the module that needs
+it, and every later occurrence of `2` in this module refers to that one.  Both
+Challenge modules are single files whose first such declaration is `dsbs`, so
+`dsbs` must come first here too or Comparator sees two different constants
+(`BSCAveraging.uselessChan._proof_1` against `BSCAveraging.dsbs._proof_1`) where
+the definitions are otherwise identical. -/
+noncomputable def uselessChan : Chan := bsc (1 / 2) (by norm_num) (by norm_num)
 
 /-! ## Entropy and mutual information (nats) -/
 
@@ -129,5 +136,35 @@ noncomputable def jointUV (p : ℝ) (cL cR : Chan) (u v : Bool) : ℝ :=
 /-- A channel with crossover `1/2` destroys everything: `a ∗ (1/2) = 1/2`. -/
 @[simp] lemma bconv_half_right (a : ℝ) : a ⊛ (1 / 2 : ℝ) = 1 / 2 := by unfold bconv; ring
 @[simp] lemma bconv_half_left (b : ℝ) : (1 / 2 : ℝ) ⊛ b = 1 / 2 := by unfold bconv; ring
+
+/-! ## The two regions, `f_e` and the Z/S rate
+
+These four are stated in `Regions.lean`, `Rigidity.lean` and `KernelAlgebra.lean`
+respectively, and are defined here for the reason given at `uselessChan`: they
+carry the literal `2`, and every definition a Challenge reproduces must mint the
+same auxiliary `Nat.AtLeastTwo` proof, which only holds if they share a module
+with `dsbs`. -/
+
+/-- Region `𝒜`: points `(R₀, R₁, R₂)` attainable with *arbitrary* binary
+channels `X → U` and `Y → V`. -/
+def regionA (p : ℝ) : Set (ℝ × ℝ × ℝ) :=
+  {R | ∃ cL cR : Chan,
+      mutualInfo (jointUX cL) ≤ R.2.1 ∧
+      mutualInfo (jointYV cR) ≤ R.2.2 ∧
+      R.1 ≤ mutualInfo (jointUV p cL cR)}
+
+/-- Region `ℬ`: the same points, attained with *binary symmetric* channels of
+crossover `a` and `b`. -/
+def regionB (p : ℝ) : Set (ℝ × ℝ × ℝ) :=
+  {R | ∃ a b : ℝ, 0 ≤ a ∧ a ≤ 1 ∧ 0 ≤ b ∧ b ≤ 1 ∧
+      log 2 - h2 a ≤ R.2.1 ∧
+      log 2 - h2 b ≤ R.2.2 ∧
+      R.1 ≤ log 2 - h2 ((a ⊛ p) ⊛ b)}
+
+/-- `f_e(y) = ∫₀^y artanh`. -/
+noncomputable def fe (y : ℝ) : ℝ := ((1 + y) * log (1 + y) + (1 - y) * log (1 - y)) / 2
+
+/-- The rate of a Z-channel with interior atom `a`: `(f_e(a) + a·log 2)/(1+a)`. -/
+noncomputable def zsRate (a : ℝ) : ℝ := (fe a + a * log 2) / (1 + a)
 
 end BSCAveraging

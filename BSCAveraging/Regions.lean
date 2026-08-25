@@ -33,23 +33,12 @@ open Real
 
 namespace BSCAveraging
 
-/-! ## The two regions -/
+/-! ## The two regions
 
-/-- Region `𝒜`: points `(R₀, R₁, R₂)` attainable with *arbitrary* binary
-channels `X → U` and `Y → V`. -/
-def regionA (p : ℝ) : Set (ℝ × ℝ × ℝ) :=
-  {R | ∃ cL cR : Chan,
-      mutualInfo (jointUX cL) ≤ R.2.1 ∧
-      mutualInfo (jointYV cR) ≤ R.2.2 ∧
-      R.1 ≤ mutualInfo (jointUV p cL cR)}
-
-/-- Region `ℬ`: the same points, attained with *binary symmetric* channels of
-crossover `a` and `b`. -/
-def regionB (p : ℝ) : Set (ℝ × ℝ × ℝ) :=
-  {R | ∃ a b : ℝ, 0 ≤ a ∧ a ≤ 1 ∧ 0 ≤ b ∧ b ≤ 1 ∧
-      log 2 - h2 a ≤ R.2.1 ∧
-      log 2 - h2 b ≤ R.2.2 ∧
-      R.1 ≤ log 2 - h2 ((a ⊛ p) ⊛ b)}
+`regionA` and `regionB` are defined in `Definitions.lean`, beside `dsbs`, so
+that the literal `2` in `regionB` mints the same auxiliary `Nat.AtLeastTwo`
+proof as the Challenge modules do; see the note there.  Everything said *about*
+them is here. -/
 
 /-! ## Monotonicity: both regions are down-closed in `R₀`, up-closed in `R₁, R₂` -/
 

@@ -142,8 +142,9 @@ BSCAveraging/
   Basic.lean                 imports exactly the dependency closure of the three
                              theorems, and runs `#print axioms` on every step
   Main.lean                  road map for result 1
-  Definitions.lean           channels, the DSBS, entropy, mutual information
-  Regions.lean               `regionA`, `regionB`, the conjecture
+  Definitions.lean           channels, the DSBS, entropy, mutual information,
+                             and every definition a Challenge reproduces
+  Regions.lean               the conjecture, and what is proved about the regions
   Conj12.lean, Conj2.lean,
   CFinish.lean, ...          results 2 and 3
   CoreSweep.lean             the kernel-checked interval sweep

@@ -88,9 +88,6 @@ noncomputable def zsValue (a d : ℝ) : ℝ :=
   d / (1 + d) * log (1 + a) + (1 - a * d) / ((1 + a) * (1 + d)) * log (1 - a * d)
     + a / (1 + a) * log (1 + d)
 
-/-- The rate of a Z-channel with interior atom `a`: `(f_e(a) + a·log 2)/(1+a)`. -/
-noncomputable def zsRate (a : ℝ) : ℝ := (fe a + a * log 2) / (1 + a)
-
 
 
 /-! ## Comonotone Schur: the two halves of the kernel lemma that *are* theorems

@@ -5,7 +5,7 @@ import BSCAveraging.Main
 
 The Challenge statement, discharged by `BSCAveraging.averaged_bsc_maximise_mutual_information`
 from `BSCAveraging/Main.lean`.  Every definition occurring in the statement is
-the one defined in `BSCAveraging/Definitions.lean` and `BSCAveraging/Regions.lean`,
+the one defined in `BSCAveraging/Definitions.lean`,
 which the Challenge reproduces verbatim.
 
 The proof is the whole `BSCAveraging` development; `BSCAveraging/Main.lean` is

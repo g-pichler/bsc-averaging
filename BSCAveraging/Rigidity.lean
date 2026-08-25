@@ -1,3 +1,4 @@
+import BSCAveraging.Definitions
 import Mathlib.Analysis.SpecialFunctions.Artanh
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
@@ -128,9 +129,6 @@ theorem artanh_lt_div {y : ℝ} (hy0 : 0 < y) (hy1 : y < 1) : artanh y < y / (1 
   exact artanh_mul_lt hy0 hy1
 
 /-! ## `f_e` and the trapezoid bound -/
-
-/-- `f_e(y) = ∫₀^y artanh`. -/
-noncomputable def fe (y : ℝ) : ℝ := ((1 + y) * log (1 + y) + (1 - y) * log (1 - y)) / 2
 
 @[simp] lemma fe_zero : fe 0 = 0 := by simp [fe]
 
