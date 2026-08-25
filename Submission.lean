@@ -1,11 +1,16 @@
 /-
-# The Palomar submission modules
+# The Palomar Challenge modules
 
-Each subdirectory holds one Challenge/Solution pair together with its
-Comparator configuration and its `formalization.yaml`:
+Each subdirectory holds one Challenge together with its Comparator
+configuration and its `formalization.yaml`:
 
 * `Submission/MO285151/`    — MathOverflow 285151, `conv 𝒜 = conv ℬ`;
 * `Submission/Conjecture2/` — Dikshtein-Ordentlich-Shamai, Conjecture 2 (`p = 0`).
+
+Each Challenge is self-contained over Mathlib: it repeats verbatim the
+definitions its statement needs and states the theorem with `sorry`.  The
+Solution that discharges it is `Solutions/<same subdirectory>/Solution.lean`,
+under its own root component — see `Solutions.lean` for why.
 
 Conjecture 1 is proved in the library (`BSCAveraging/CFinish.lean`) but has no
 configuration on this branch: its Pólya certificate runs under `native_decide`,

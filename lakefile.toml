@@ -1,6 +1,6 @@
 name = "BSCAveraging"
 version = "1.0.0"
-defaultTargets = ["BSCAveraging", "Submission"]
+defaultTargets = ["BSCAveraging", "Submission", "Solutions"]
 
 [[require]]
 name = "mathlib"
@@ -16,9 +16,16 @@ rev = "81a5d257c8e410db227a6665ed08f64fea08e997"
 [[lean_lib]]
 name = "BSCAveraging"
 
-# The Palomar Challenge/Solution pairs.  Each Challenge is self-contained and
-# imports Mathlib only; each Solution imports `BSCAveraging` and discharges the
-# corresponding Challenge statement.
+# The Palomar Challenges.  Each is self-contained and imports Mathlib only.
 [[lean_lib]]
 name = "Submission"
 globs = ["Submission.+"]
+
+# The Solutions, each importing the one library module that discharges its
+# Challenge.  They sit under their own root component: Comparator puts the
+# protected Challenge directory first on `LEAN_PATH`, and Lean resolves a module
+# by its root component alone, so a Solution sharing the Challenge's root is
+# looked for in that directory and not found (PalomarSubmission issue 108).
+[[lean_lib]]
+name = "Solutions"
+globs = ["Solutions.+"]

@@ -150,7 +150,8 @@ BSCAveraging/
   KernelCertFast.lean        the `native_decide` Pólya certificate
   Exploration/               exploration, experiments and documentation, not used
                              in the final result
-Submission/                  the Palomar Challenge/Solution pairs
+Submission/                  the Palomar Challenges and their configurations
+Solutions/                   the matching Solutions, under their own root
 ```
 
 `BSCAveraging/Exploration/NOTES.md` is a working record written as the attack 
@@ -169,13 +170,20 @@ Requires the pinned Lean and Mathlib in `lean-toolchain` and `lakefile.toml`.
 
 ## Submission modules
 
-`Submission/` holds one Challenge/Solution pair per submitted result, each with
-its Comparator configuration and its `formalization.yaml`:
+`Submission/` holds one Challenge per submitted result, with its Comparator
+configuration and its `formalization.yaml`; `Solutions/` holds the matching
+Solution:
 
-| Directory | Theorem compared |
-| --- | --- |
-| `Submission/MO285151/` | `BSCAveraging.MO285151.averaged_bsc_maximise_mutual_information` |
-| `Submission/Conjecture2/` | `BSCAveraging.DSIB.conjecture2_p0` |
+| Challenge | Solution | Theorem compared |
+| --- | --- | --- |
+| `Submission/MO285151/` | `Solutions/MO285151/` | `BSCAveraging.MO285151.averaged_bsc_maximise_mutual_information` |
+| `Submission/Conjecture2/` | `Solutions/Conjecture2/` | `BSCAveraging.DSIB.conjecture2_p0` |
+
+The two sit under different root components on purpose. Comparator exports the
+Challenge from a protected directory placed first on `LEAN_PATH`, and Lean
+resolves a module by its **root** component alone, so a Solution sharing the
+Challenge's root is looked for in that directory and not found — the failure
+reported as [PalomarSubmission issue 108](https://github.com/PalomarRegistry/PalomarSubmission/issues/108).
 
 **On this branch there is deliberately no configuration for Conjecture 1.**
 `conjecture1_p0_holds` is proved in `BSCAveraging/CFinish.lean` and remains part
