@@ -31,7 +31,7 @@ Four steps, over binary `U, V`:
 Step (C) uses two computed checks.  The 650-cell interval sweep of regime 2 of
 the core is checked by the Lean **kernel** (`BSCAveraging/CoreSweep.lean`).  The
 24129-monomial Pólya expansion of the kernel lemma is checked by
-`native_decide` (`BSCAveraging/KernelCertFast.lean`).  On Lean v4.32.2 that
+`native_decide` (`BSCAveraging/KernelCertFast.lean`).  On Lean v4.32.0 that
 mints a per-declaration auxiliary axiom, so this theorem's axiom report reads
 `[propext, Classical.choice, Quot.sound,
 BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1]`.  Comparator

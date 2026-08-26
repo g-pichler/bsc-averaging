@@ -36,7 +36,7 @@ project:
     `averaged_bsc_maximise_mutual_information` and `conjecture2_p0_holds` depend only on `propext`,
     `Classical.choice` and `Quot.sound`. `conjecture1_p0_holds` additionally depends on exactly one
     further axiom: the 24129-monomial Polya certificate of its kernel lemma is checked by
-    `native_decide`, which on Lean v4.32.2 mints a per-declaration auxiliary axiom
+    `native_decide`, which on Lean v4.32.0 mints a per-declaration auxiliary axiom
     (BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1) rather than citing
     `Lean.ofReduceBool`; that auxiliary axiom is a custom axiom in Comparator's sense. The other
     computed step of that proof, a 650-cell interval sweep, is checked by the Lean kernel and adds
@@ -113,7 +113,7 @@ scope: |-
   formalized; (iii) optimality form, not uniqueness of the maximiser: the theorem says the Z/S
   pair is not exceeded, not that it is the only maximiser; (iv) the theorem depends on one
   further axiom, minted by the native_decide check of the 24129-monomial Polya certificate in
-  BSCAveraging/KernelCertFast.lean. On Lean v4.32.2 that is a per-declaration auxiliary axiom,
+  BSCAveraging/KernelCertFast.lean. On Lean v4.32.0 that is a per-declaration auxiliary axiom,
   BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1, which Comparator rejects as a
   custom axiom, so this configuration does not meet Palomar's permitted-axiom rule until the
   certificate is checked by the Lean kernel instead.
