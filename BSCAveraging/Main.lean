@@ -52,8 +52,15 @@ Since `ℬ ⊆ 𝒜` (`regionB_subset_regionA`), only `𝒜 ⊆ conv ℬ` is at 
    ```
    s_u = 1 − 2·P(X=1 | U=u),   t_v = 1 − 2·P(Y=1 | V=v),   both in [−1,1]
    ```
-   and the **bias random variables** are `S = s_U`, `T = t_V` (independent, since
-   `U — X — Y — V`).  A mean-zero two-point law is `S ∈ {a, −b}` with
+   and the **bias random variables** are `S = s_U`, `T = t_V`.  They are *not*
+   independent — their dependence is what `I(U;V)` measures.  What the Markov
+   chain `U — X — Y — V` gives is that the two channels act on the source
+   separately, so the dependence is rank one: the joint law of `(U,V)` is
+   `π_u·ρ_v·(1 + δ·s_u·t_v)` (`jointUV_eq_kernel`), the product tilted by a
+   single correlation kernel.  Mean-zero biases make that kernel average to `1`
+   on each side, so `π` and `ρ` are the marginals, and the sums below —
+   `mutualInfo_jointUV_eq_kernel_sum` among them — run against the *product*
+   `π ⊗ ρ`.  A mean-zero two-point law is `S ∈ {a, −b}` with
    `P(S = a) = b/(a+b)` — **positive atom first** — so in Lean
    ```
    a = s_false,  b = −s_true,   c = t_false,  d = −t_true,   all in [0,1]
