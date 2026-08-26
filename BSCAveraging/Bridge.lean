@@ -2,18 +2,12 @@ import BSCAveraging.BiasCoords
 import BSCAveraging.FixedPoint
 import BSCAveraging.DataProcessing
 
-/-! # From `mutualInfo` to `lagrTwoPoint`
+/-! # The two-point weights, from the mean-zero relations
 
 The two-point theorem of `FixedPoint.lean` is stated about the algebraic
-expression `lagrTwoPoint`.  This file identifies that expression with the actual
-Lagrangian of the problem,
-
-```
-F(cL, cR) = I(U;V) − μ·I(U;X) − ν·I(Y;V)
-```
-
-for a pair of binary channels.  Writing `s_u = biasOf (jointUX cL) u` and
-`t_v = biasOfSnd (jointYV cR) v` for the two bias vectors, and
+expression `lagrTwoPoint`, whose weights are not free: they are determined by the
+bias vectors.  Writing `s_u = biasOf (jointUX cL) u` and
+`t_v = biasOfSnd (jointYV cR) v`, and
 
 ```
 a = s_false,  b = −s_true,   c = t_false,  d = −t_true
@@ -26,9 +20,13 @@ the mean-zero relations `Σ π_u s_u = 0` and `Σ ρ_v t_v = 0` (which hold beca
 π_false = b/(a+b),  π_true = a/(a+b),   ρ_false = d/(c+d),  ρ_true = c/(c+d)
 ```
 
-— exactly the weights built into `lagrTwoPoint`.  Everything then matches term by
-term against `mutualInfo_jointUV_eq_kernel_sum`, `mutualInfo_jointUX_eq_bias` and
-its `V`-side analogue.
+— exactly the weights built into `lagrTwoPoint`.  Those four identities,
+`pi_false_eq`, `pi_true_eq`, `rho_false_eq` and `rho_true_eq`, are this file.
+
+The identification of `lagrTwoPoint` with the Lagrangian itself is assembled from
+them in `Assembly.lean` (`mutualInfo_jointUX_eq_bias_closed` and
+`lagrangian_eq_lagrTwoPoint_closed`), against
+`mutualInfo_jointUV_eq_kernel_sum` of `BiasCoords.lean`.
 
 See `BSCAveraging.Basic`. -/
 

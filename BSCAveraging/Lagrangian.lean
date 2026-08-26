@@ -1,7 +1,7 @@
 import BSCAveraging.SignFlip
 import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 
-/-! # The Lagrangian in bias coordinates, and the region `μ ≥ 1`
+/-! # `f(z) = (1+z)·log(1+z)`, and the parity of `f_e`
 
 `NOTES.md` §5h rewrites the Lagrangian using `I(U;V) = I(U;X) − I(U;X|V)`
 (valid because `U — X — (Y,V)` is Markov):
@@ -10,24 +10,20 @@ import Mathlib.Analysis.SpecialFunctions.Log.NegMulLog
 F = (1−μ)·I(U;X) − I(U;X|V) − ν·I(Y;V) .
 ```
 
-All three terms are `≤ 0` as soon as `μ ≥ 1`, so `F ≤ 0`, while the symmetric
-optimum is always `≥ g(0,0) = 0`.  Hence `J = J_sym` for every `μ ≥ 1` — and,
-by the symmetry of the problem, for every `ν ≥ 1`.  So `μ, ν ∈ [0,1)` is WLOG.
+In bias coordinates `I(U;V) = E f(δST)` for `f(z) = (1+z)·log(1+z)`, and what the
+proof needs of `f` is its splitting into the even part `f_e` and the odd part
+`fo` of `SignFlip.lean`.  This file is that small piece:
 
-This file proves that in **bias coordinates**, where the same statement needs
-only the data-processing inequality `E f(δST) ≤ E f_e(S)`, and where that in turn
-has a two-line proof:
+* `fe_neg` — `f_e` is even;
+* `fFun` — the definition of `f`;
+* `fFun_eq_fe_add_fo`, `fFun_zero` — the decomposition `f = f_e + fo`, and `f(0) = 0`.
 
-* `f(z) = (1+z)·log(1+z)` is convex, so on `[−a, a]` it lies below its chord,
-  which is `f_e(a) + z·fo(a)/a` (`fFun_le_chord`);
-* `δ·s·T` has mean `0` and stays in `[−|s|, |s|]`, so averaging the chord bound
-  over `T` gives `E_T f(δsT) ≤ f_e(s)` (`dpi_row`);
-* averaging over `S` gives `E f(δST) ≤ E f_e(S)` (`lagrKernel_le`), which is
-  exactly `I(U;V) ≤ I(U;X)`.
-
-Everything is stated for two-point laws, which is no loss: `F` is bilinear in
-the pair of laws and the extreme points of the mean-zero measures on `[−1,1]`
-are the two-point ones (`NOTES.md` §2, §5e).
+The Lagrangian itself is bounded in `FixedPoint.lean`, through the two-point form
+and its four corner values, with no hypothesis on `μ` or `ν`; the region `μ ≥ 1`
+therefore needs no separate treatment and none is carried out here.  The earlier
+route — the chord bound on `f` and the row-wise data-processing inequality
+(`fFun_le_chord`, `dpi_row`, `lagrKernel_le`) — is proved in
+`Exploration/Misc.lean` and is used by none of the three theorems.
 
 See `BSCAveraging.Basic`. -/
 

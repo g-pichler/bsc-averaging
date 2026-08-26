@@ -1,7 +1,7 @@
 import BSCAveraging.SaddleIII
 import BSCAveraging.LogCosh
 
-/-! # Two-atom laws in `θ` coordinates, and the saddle criterion
+/-! # Two-atom laws in `θ` coordinates, and the Hessian at the symmetric point
 
 `NOTES.md` §7e.  At `p = 0` the value is **bilinear** in the two side-laws:
 with `μ` supported on the biases `s_u` with weights `π_u`,
@@ -21,14 +21,16 @@ is an *exact identity*, not a Taylor expansion: `A_U`, `A_V` are one-sided and
 `Q` is the bilinear cross term.  That is what makes the second-order test for
 `(C)` a computation on one-sided objects only.
 
-For a two-atom mean-zero law with atoms `tanh α, −tanh β` the weights are forced,
-`π₁ = sinh β cosh α / sinh(α+β)`, `π₂ = sinh α cosh β / sinh(α+β)`, and both the
-rate and the value collapse to closed forms in `θ` coordinates (`Rtwo`, `Vtwo`
-below; both verified against the direct definitions).
+What this file supplies are the three second-order coefficients of that test at
+the symmetric point — `Fpq`, `Fpp`, `Fqq` — their closed forms in `θ`
+coordinates (`Fpq_eq`, `Fpp_eq`, `Fqq_eq`), and the sign that the minimisation
+side needs, `Fpp_neg`.  For Conjecture 2 that sign is the whole of `(C′)`: `Conj2.lean`
+uses `Fpp_neg` directly, with no ratio to estimate.
 
-The saddle criterion of §7e — the Hessian slope product `F_uv²/(F_uu F_vv)`
-exceeding `1` at the symmetric point — is **exactly the reciprocal** of the
-(iii) ratio, so `saddle_iii` discharges it: `saddleRatio_gt_one`. -/
+The saddle criterion of §7e for the maximisation — the slope product
+`F_uv²/(F_uu F_vv)` exceeding `1`, which is exactly the reciprocal of the (iii)
+ratio and so follows from `saddle_iii` — is `saddleRatio_gt_one` in
+`Exploration/TwoAtom.lean`, and is used by none of the three theorems. -/
 
 namespace BSCAveraging.Core
 

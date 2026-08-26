@@ -1,43 +1,43 @@
 import BSCAveraging.Lagrangian
 
-/-! # The fixed-point manifold: closed forms, the route-2 identity, and (E4)
+/-! # The two-point Lagrangian, and `F ≤ M` from its four corner values
 
-`NOTES.md` §6 records a set of identities on the alternating-maximisation
-fixed-point manifold, all verified numerically to `< 4e-14`.  This file proves
-them.
-
-A fixed point is parametrised by the two-point data `a,b` (U-side) and `c,d`
-(V-side) together with `δ`.  The `(m,k)` coordinates are *defined* from `a,b`:
+`NOTES.md` §6.  A pair of two-point laws is parametrised by the atoms `a, b`
+(U-side) and `c, d` (V-side) together with `δ`.  The Lagrangian evaluated there
+is `lagrTwoPoint`, and it splits as
 
 ```
-m = (b−a)/(a+b),   k = 2ab/(a+b)        (equivalently a = k/(1+m), b = k/(1−m))
+F = gSum + Ω                                   lagrTwoPoint_eq_gSum_add_Omega
 ```
 
-so that `1 + m = 2b/(a+b)` and `1 − m = 2a/(a+b)`.  Everything then rests on one
-factorisation, proved in `one_add_bOne` and friends:
+where `gSum` is the weighted average of the four corner values of
+`g(s,t) = f_e(δ·s·t) − μ·f_e(s) − ν·f_e(t)` (`gSym`), and `Ω` — `OmegaTwoPoint`
+of `SignFlip.lean` — is the odd gain, a mixed second difference vanishing as soon
+as either side is unskewed (`omegaTwoPoint_zero_of_fst_eq`, `..._snd_eq`).
+
+Same-skew pairs are immediate (`lagrTwoPoint_lt_of_same_skew`).  What remains is
+the opposite-skew case, and for it the **four-corner form (S4)**:
 
 ```
-1 + b₁ = (1+m)(1 + aδc),     1 − b₁ = (1−m)(1 − bδc)
-1 + b₂ = (1+m)(1 − aδd),     1 − b₂ = (1−m)(1 + bδd)
+Ω ≤ gMax4 − gSum                               omegaTwoPoint_le_spread
 ```
 
-From it: `D = artanh a + artanh b` (`DOf_eq`), `Δℓ` is a combination of the four
-joint logarithms (`DlOf_eq`), and the `log(1±m)` terms in `I(U;V)` cancel because
-`wc·c = wd·d`, giving `mutualTP_eq`.  The results are
+the odd gain is at most the spread the four corners already exhibit — a finite
+condition, with no continuum maximisation and no `f_e⁻¹`.  It is proved from the
+strict inequality `z < (1+z²)·artanh z` (`lt_one_add_sq_mul_artanh`) through the
+negative mixed difference of `HStep` (`HStep_mixed_diff_neg`) and the
+supermodularity of `(s,t) ↦ f_e(δ·s·t)` (`fe_mul_supermodular`).
 
-```
-𝒥(U;V) = k·δ·κ·Δℓ                                     jeffreysTP_eq
-I(U;V) = wc·f_e(b₁) + wd·f_e(b₂) − f_e(m)                   mutualTP_eq
-ρ(U;X) = 2(A − f_e(m))/(k·D) = G(a,b)                   rhoUX_eq
-Φ      = k·δ·κ·Δℓ · [ρ(U;V) − G(a,b) − G(c,d)]        route_identity
-```
+Hence the file's conclusion, which is what `Assembly.lean` applies: any common
+bound `M` on the four corner values bounds `F` itself, first on the open box
+(`lagrTwoPoint_le_of_corner_bounds`) and then on the closed one, atoms at `0` or
+`1` allowed (`lagrTwoPoint_le_of_corner_bounds_closed`).  Note that `μ` and `ν`
+are unconstrained throughout.
 
-For (E4) this file proves the statement that is actually settled: that it holds
-**automatically at symmetric points**, so it carries only asymmetric content.
-Its *variational* characterisation — that solutions of (E2),(E4) are exactly the
-best responses — is supported by numerics (`5.6e-14`) but is **not** claimed
-here; formalising it needs the variational setup, which this development does
-not yet have.
+The closed forms on the alternating-maximisation fixed-point manifold — the
+factorisation `one_add_bOne`, `DOf_eq`, `mutualTP_eq`, `route_identity` and the
+rest of `NOTES.md` §6's identities — are a different route to the same corner,
+proved in `Exploration/Misc.lean` and used by none of the three theorems.
 
 See `BSCAveraging.Basic`. -/
 

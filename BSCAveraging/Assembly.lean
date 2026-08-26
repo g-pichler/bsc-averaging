@@ -4,22 +4,28 @@ import BSCAveraging.BSC
 
 /-! # Assembling the conjecture from the two-point theorem
 
-Every ingredient is proved elsewhere:
+Two ingredients are proved elsewhere:
 
 * `regionA_subset_convexHull_regionB` — the support-function reduction;
-* `lagrangian_eq_lagrTwoPoint` — the Lagrangian of a channel pair *is*
-  `lagrTwoPoint`;
 * `lagrTwoPoint_le_of_corner_bounds_closed` — the two-point theorem on the
-  closed box.
+  closed box (`FixedPoint.lean`).
 
-This file supplies the remaining glue: the dictionary between **biases** (used by
-`lagrTwoPoint`) and **crossovers** (used by `regionB`),
+The identification of the Lagrangian with `lagrTwoPoint` is completed here, on
+the closed box and so with degenerate rows allowed: `mutualInfo_jointUX_eq_bias_closed`
+and its `V`-side analogue rewrite each mutual information in bias coordinates,
+and `lagrangian_eq_lagrTwoPoint_closed` puts the two together, using the weight
+identities of `Bridge.lean`.
+
+The rest is the dictionary between **biases** (used by `lagrTwoPoint`) and
+**crossovers** (used by `regionB`),
 
 ```
 f_e(1 − 2α) = log 2 − h₂ α,        1 − 2(α ⊛ β) = (1−2α)(1−2β)
 ```
 
-and the sign normalisation that puts the two-point data in `[0,1]`.
+the sign normalisation that puts the two-point data in `[0,1]`, and the reflection
+`p ↦ 1 − p` that carries the result past `p = 1/2` (`averagedBSCConjecture_one_sub`,
+`averagedBSCConjecture_all`).
 
 See `BSCAveraging.Basic`. -/
 

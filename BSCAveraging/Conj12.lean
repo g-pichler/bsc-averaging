@@ -3,24 +3,33 @@ import BSCAveraging.KernelAlgebra
 
 /-! # Conjectures 1 and 2 of Entropy 24(9):1321, at `p = 0`
 
-`NOTES.md` §7d′ assembles the two conjectures out of four steps:
+`NOTES.md` §7d′ assembles the two conjectures out of four steps, over binary
+`U, V` (Pichler Prop 4.3, cited and not formalized):
 
-1. a maximiser exists and is a best response on each side, hence an
-   alternating-maximisation fixed point (binary `U,V` suffice, Pichler Prop 4.3);
-2. fixed points are the symmetric BSC pair, or have an atom at `±1`
-   (`interior_response_symmetric` plus the Λ-symmetry argument of §7c⁗);
-3. the BSC pair is a **saddle**, not a maximum — inequality (iii), proved in
-   §7f (one-variable core) and §7f‴ (diagonal reduction via the kernel lemma);
-4. at the corner the Z/S pair is optimal — `mutualInfo_le_of_sChan`, with the
-   tangency of the certificate at the Z-channel's atoms.
+1. an optimiser exists — compactness of the parameter box cut by the two rate
+   constraints (`maxExistsC`, `minExistsC`, proved below out of
+   `continuous_mutualInfo`, `chan_eq_chanOf` and `isCompact_paramFeasible`);
+2. an interior optimiser is the symmetric BSC pair — KKT for a maximiser under
+   `R ≤ C` and a minimiser under `R ≥ C` have the same form, so the step is
+   stated once for `OptPairC` (`interiorIsBSC_of_noCorner`, in `BFinishV.lean`);
+3. the BSC pair is a saddle, not an optimum — for the maximisation the saddle
+   inequality (iii) (`saddle_iii`), for the minimisation `F_pp < 0` alone
+   (`symmetric_not_min`);
+4. at the corner the Z/S resp. Z/Z pair is optimal — the certificates, tight at
+   the Z-channel's atoms (`cornerBound` below, `cornerBoundMin`).
 
-Steps 1–3 say: *every admissible pair is dominated by one whose `V`-side is an
-S-channel*.  That composite is `CornerDomination` below — the single statement
-carrying all the formalisation debt of this file (steps 1 and 2 are paper
-arguments; step 3 is proved but partly by certified computation).  Step 4 is
-already a Lean theorem, and this file supplies the missing arithmetic link
-between it and the conjecture as stated: `certificate_tight`, saying the
-certificate's bound at the Z-channel's own rate is *exactly* the Z/S value.
+What this file carries of that is steps 1 and 4 together with the arithmetic
+around the Z/S branch: `certificate_tight`, saying the certificate's bound at the
+Z-channel's own rate is *exactly* the Z/S value; `sChan_rate`, identifying the
+S-channel's rate with `zsRate`; the monotonicity of `zsRate` and of `zsValue`
+(`zsRate_strictMonoOn`, `zsValue_strictMonoOn_snd`, `le_of_zsRate_le`,
+`zsValue_mono_snd`); and the bounds `fe_lt_log_two`, `zsRate_lt_log_two`,
+`zsValue_pos`.
+
+The `Prop`-level bundling of steps 1–3 into a single corner-domination statement,
+and the route through `interior_response_symmetric` and `mutualInfo_le_of_sChan`,
+are in `Exploration/Conj12.lean` and `Exploration/PZero.lean`; no part of the
+proof imports them.
 
 `Conjecture1_p0` and `Conjecture2_p0` are `Prop`s, never assumed. -/
 

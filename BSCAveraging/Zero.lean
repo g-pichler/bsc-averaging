@@ -6,15 +6,17 @@ import BSCAveraging.DataProcessing
 Two things:
 
 * **Data processing on the region** (any `p`): `𝒜 ⊆ {R₀ ≤ R₁} ∩ {R₀ ≤ R₂}`,
-  together with `0 ≤ R₁`, `0 ≤ R₂` and `R₀ ≤ log 2`
+  together with `0 ≤ R₁`, `0 ≤ R₂` and the source bound `R₀ ≤ log 2 − h₂ p`
   (`regionA_fst_le_snd_fst`, `regionA_fst_le_snd_snd`, `regionA_snd_fst_nonneg`,
-  `regionA_snd_snd_nonneg`, `regionA_fst_le_log_two`).
+  `regionA_snd_snd_nonneg`, `regionA_fst_le_source`).  Together they put `𝒜`
+  inside the explicit `outerBound` (`regionA_subset_outerBound`).
 * **The case `p = 0`** (`X = Y`): the conjecture holds
   (`averagedBSCConjecture_zero`), even though `𝒜 ≠ ℬ` there — the MO 213084
   counterexample lives at `p = 0`.  The reason the hulls still agree: at `p = 0`
   the data processing bound `R₀ ≤ min (R₁, R₂)` is already achieved by
   *time-sharing* the two extreme symmetric choices, the useless channel pair
-  (giving `(0,0,0)`) and the noiseless pair (giving `(log 2, log 2, log 2)`).
+  (giving `(0,0,0)`, `origin_mem_regionB_zero`) and the noiseless pair (giving
+  `(log 2, log 2, log 2)`, `top_mem_regionB_zero`).
 
 See `BSCAveraging.Basic`. -/
 

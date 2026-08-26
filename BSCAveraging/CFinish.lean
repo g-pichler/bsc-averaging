@@ -30,10 +30,15 @@ fixed point**, no curve differentiation.
 second-order rate drift, and `∇R·g > 0`.  Then `R(ε) − Cu = −η(∇R·g)ε² + o(ε²)`,
 strictly feasible for small `ε > 0`, and the induced value loss `λ(R−Cu)` is
 `O(η ε²)` — which the strict margin of `hessian_indefinite` absorbs once `η` is
-small.  Only `∇R ≠ 0` is needed, and that is `Dfst_fe_pos` / `Dsnd_fe_neg`.
+small.  Only `∇R ≠ 0` is needed, and that is `Dfst_fe_pos` of `BFinish.lean`
+(its `V`-side mirror, `Dsnd_fe_neg`, is in `Exploration/CFinish.lean` and is not
+used here).
 
-What is formalised below: the rate gradient's second component, the exact
-decomposition, and the second-order positivity test. -/
+What is formalised below: the one-variable second-order tests
+(`pos_of_second_deriv_pos`, `neg_of_second_deriv_neg`), the exact decomposition
+`total_second_order_eq` and the positivity test `hessian_form_pos` that go with
+them, and — at the end of the file — the `U`-side corner bound `cornerBoundU`
+and **`conjecture1_p0_holds`** itself. -/
 
 namespace BSCAveraging
 

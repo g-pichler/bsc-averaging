@@ -1,28 +1,24 @@
 import Mathlib.Analysis.Complex.ExponentialBounds
 import BSCAveraging.PZero
-/-! # The `p = 0` diagonal reduction: the parts that are theorems
+/-! # The Z/S branch value at `p = 0`
 
 `NOTES.md` §7f reduces Conjecture 1 at `p = 0` to the *kernel lemma*, an explicit
-rational inequality in five variables.  This file collects the pieces of that
-analysis which are proofs rather than numerics.
+rational inequality in five variables.  What that reduction needs from this file
+is one definition: `zsValue`, the value of the Z/S branch as a function of the
+two Z-parameters.  Its companion `zsRate` is in `Definitions.lean`, beside
+`dsbs`.
 
-* `artanh_edge` — the **boundary case of (iii)**: `β < artanh β·(1 − β²/3)` on
-  `(0,1)`.  This is exactly what makes the leading coefficient of `Q̃` positive
-  as `α → 0` with `β` fixed, so the boundary behaviour of (iii) is settled.  The
-  difference vanishes at `0` and has derivative
-  `(2β/3)·[β/(1−β²) − artanh β] > 0`, the bracket being `artanh_mul_lt`.
-* `schur_decomposition` — the identity splitting the kernel lemma into a
-  Chebyshev term and a manifestly nonnegative one.
-* `cube_sum_ge_three_mul` — `r₁³+r₂³+r₃³ ≥ 3r₁r₂r₃`, which is the equal-weight
-  case of the kernel lemma.
-* `rFun_sub`, `fFun'_sub`, `fg_cross` — the difference identities showing every
-  difference in the kernel lemma carries an explicit factor `(θ_l − θ_i)`.  They
-  are why the kernel is divisible by `(θ_i−θ_l)²`, hence the shape of the
-  certificate ansatz.
+The section headings below track `Exploration/KernelAlgebra.lean`, so that the
+two read in parallel.  That file, which no part of the proof imports, is where
+the analysis of the reduction lives: the boundary case of (iii) (`artanh_edge`),
+the Schur-type decomposition (`schur_decomposition`), its equal-weight case
+(`cube_sum_ge_three_mul`), the difference identities carrying an explicit factor
+`(θ_l − θ_i)` (`rFun_sub`, `fFun'_sub`, `fg_cross`), and the vanishing of the
+kernel on the face `u = 1`.
 
-`KernelLemma` states the one inequality still open.  `NOTES.md` §7f records that
-every diagonal-Handelman LP relaxation of it is infeasible — `Q` is negative off
-the box `A ≤ 1` — so a genuine SOS with cross terms is needed.
+The kernel lemma is not open: it is proved by the Pólya certificate of
+`KernelCertFast.lean` (`kerQ_nonneg_reflect`), computed by `PE.norm` and checked
+by `native_decide` — the one auxiliary axiom Conjecture 1 carries.
 
 See `NOTES.md` §7f. -/
 
