@@ -43,11 +43,11 @@ project:
     no axiom.
     
     Scope, stated once for all three results. The channels are binary on both sides. For (1) this
-    is the setting of the source question. For (2) and (3) the reduction of the double-sided
-    bottleneck over arbitrary alphabets to binary test channels is Proposition 3 of the
-    Dikshtein-Ordentlich-Shamai paper and Proposition 4.3 of the Pichler-Piantanida-Matz paper; it
-    is cited here, not formalized, so read as statements about R(Cu, Cv, 0) with unrestricted
-    alphabets, (2) and (3) are conditional on that published cardinality bound. Conjecture 2 is
+    is the setting of the source question. For (2) and (3) it is a genuine restriction:
+    Conjectures 1 and 2 are stated for R(Cu, Cv, 0), whose maximisation ranges over test channels
+    with unrestricted alphabets, and that binary U and V suffice for a DSBS is Proposition 3 of the
+    Dikshtein-Ordentlich-Shamai paper, cited here and not formalized. Read as statements about
+    R(Cu, Cv, 0), (2) and (3) are therefore conditional on that published cardinality bound. Conjecture 2 is
     stated in its minimisation form, min I(U;V) at fixed rates; the identity
     I(U;V) = I(U;X) + I(V;X) - I(X;U,V) that turns the paper's maximisation of I(X;U,V) into
     that minimisation is the authors' own, given as Remark 5 of the same paper, and is likewise
@@ -108,7 +108,9 @@ review:
 scope: |-
   This configuration selects one theorem,
   BSCAveraging.DSIB.conjecture2_p0. Known gaps and restrictions: (i) p = 0 only; (ii) binary U
-  and V, the cardinality reduction being cited and not formalized; (iii) optimality form, not
+  and V, the reduction to binary test channels (Dikshtein-Ordentlich-Shamai Proposition 3) being
+  cited and not formalized, so the theorem read as a statement about R(Cu, Cv, 0) is conditional
+  on it; (iii) optimality form, not
   uniqueness of the minimiser: the theorem says the Z/Z pair is not undercut, not that it is the
   only minimiser; (iv) the paper states Conjecture 2 as maximising I(X;U,V), and
   the identity I(U;V) = I(U;X) + I(V;X) - I(X;U,V) that makes this the same as minimising
@@ -130,7 +132,7 @@ sources:
       - "Or Ordentlich"
       - "Shlomo Shamai (Shitz)"
     note: |-
-      Entropy 24(9):1321 (2022). States Conjecture 2 as the maximisation of I(X;U,V); the Lean statement is the equivalent minimisation of I(U;V) at fixed rates, and the identity relating the two is cited, not formalized. Its Proposition 3 is the cardinality reduction to binary test channels.
+      Entropy 24(9):1321 (2022). States Conjecture 2 as the maximisation of I(X;U,V); the Lean statement is the equivalent minimisation of I(U;V) at fixed rates, and the identity relating the two is cited, not formalized. Its Proposition 3 is the cardinality reduction to binary test channels that the Lean statement assumes and does not formalize.
   - title: "Distributed Information-Theoretic Clustering"
     type: paper
     relationship: background
@@ -140,4 +142,4 @@ sources:
       - "Pablo Piantanida"
       - "Gerald Matz"
     note: |-
-      Information and Inference 11 (2022). Its Proposition 4.3 is the second reference for the cardinality reduction to binary U and V.
+      Information and Inference 11 (2022). Cited for Conjecture 5.2, which result (1) settles, and for Proposition 4.3, conv(S_i) = conv(R_i), which result (1) uses.

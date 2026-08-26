@@ -72,10 +72,11 @@ against S, flipping both inputs being a symmetry of all three informations.
 ## Scope, and what is *not* claimed
 
 1. **`p = 0` only** — the case the paper's conjecture states.
-2. **Binary `U` and `V`.**  `Chan` is a `2 × 2` row-stochastic matrix.  That
-   binary test channels suffice for a binary source is Proposition 3 of the
-   same paper (and Proposition 4.3 of Pichler–Piantanida–Matz, IMAIAI **11**
-   (2022)); it is *cited, not formalized here*.
+2. **Binary `U` and `V`.**  `Chan` is a `2 × 2` row-stochastic matrix.  The
+   conjecture is a statement about test channels with unrestricted alphabets;
+   that binary `U` and `V` suffice for a DSBS is Proposition 3 of the same
+   paper, *cited, not formalized here*, and the theorem below is therefore
+   conditional on it.
 3. **Value, not uniqueness.**  The theorem says the Z/Z value is not
    undercut.  It does not claim the Z/Z pair is the *only* minimizer.
 4. **The objective translation** described above.

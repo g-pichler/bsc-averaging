@@ -43,11 +43,11 @@ project:
     no axiom.
     
     Scope, stated once for all three results. The channels are binary on both sides. For (1) this
-    is the setting of the source question. For (2) and (3) the reduction of the double-sided
-    bottleneck over arbitrary alphabets to binary test channels is Proposition 3 of the
-    Dikshtein-Ordentlich-Shamai paper and Proposition 4.3 of the Pichler-Piantanida-Matz paper; it
-    is cited here, not formalized, so read as statements about R(Cu, Cv, 0) with unrestricted
-    alphabets, (2) and (3) are conditional on that published cardinality bound. Conjecture 2 is
+    is the setting of the source question. For (2) and (3) it is a genuine restriction:
+    Conjectures 1 and 2 are stated for R(Cu, Cv, 0), whose maximisation ranges over test channels
+    with unrestricted alphabets, and that binary U and V suffice for a DSBS is Proposition 3 of the
+    Dikshtein-Ordentlich-Shamai paper, cited here and not formalized. Read as statements about
+    R(Cu, Cv, 0), (2) and (3) are therefore conditional on that published cardinality bound. Conjecture 2 is
     stated in its minimisation form, min I(U;V) at fixed rates; the identity
     I(U;V) = I(U;X) + I(V;X) - I(X;U,V) that turns the paper's maximisation of I(X;U,V) into
     that minimisation is the authors' own, given as Remark 5 of the same paper, and is likewise
@@ -108,9 +108,9 @@ review:
 scope: |-
   This configuration selects one theorem,
   BSCAveraging.DSIB.conjecture1_p0. Known gaps and restrictions: (i) p = 0 only, the only case
-  the paper's Conjecture 1 states; (ii) binary U and V, the cardinality reduction being cited
-  (Dikshtein-Ordentlich-Shamai Proposition 3, Pichler-Piantanida-Matz Proposition 4.3) and not
-  formalized; (iii) optimality form, not uniqueness of the maximiser: the theorem says the Z/S
+  the paper's Conjecture 1 states; (ii) binary U and V, the reduction to binary test channels
+  (Dikshtein-Ordentlich-Shamai Proposition 3) being cited and not formalized, so the theorem read
+  as a statement about R(Cu, Cv, 0) is conditional on it; (iii) optimality form, not uniqueness of the maximiser: the theorem says the Z/S
   pair is not exceeded, not that it is the only maximiser; (iv) the theorem depends on one
   further axiom, minted by the native_decide check of the 24129-monomial Polya certificate in
   BSCAveraging/KernelCertFast.lean. On Lean v4.32.0 that is a per-declaration auxiliary axiom,
@@ -143,4 +143,4 @@ sources:
       - "Pablo Piantanida"
       - "Gerald Matz"
     note: |-
-      Information and Inference 11 (2022). Its Proposition 4.3 is the second reference for the cardinality reduction to binary U and V.
+      Information and Inference 11 (2022). Cited for Conjecture 5.2, which result (1) settles, and for Proposition 4.3, conv(S_i) = conv(R_i), which result (1) uses.

@@ -68,12 +68,12 @@ Three limitations, all deliberate:
    Conjecture 3 of the same paper, which concerns `p` above a threshold, is not
    addressed here.
 2. **Binary `U` and `V`.**  `Chan` is a `2 × 2` row-stochastic matrix, so the
-   maximisation is over binary test channels.  That this is no loss of
-   generality for a binary source is Proposition 3 of the same paper (and
-   Proposition 4.3 of Pichler–Piantanida–Matz, IMAIAI **11** (2022)); it is
-   *cited, not formalized here*.  Read as a statement about `R(Cu, Cv, 0)` with
-   unrestricted alphabets, the theorem below is therefore conditional on that
-   published cardinality reduction.
+   maximisation is over binary test channels.  Conjecture 1 is a statement
+   about `R(Cu, Cv, 0)`, whose maximisation ranges over test channels with
+   unrestricted alphabets; that binary `U` and `V` suffice for a DSBS is
+   Proposition 3 of the same paper, *cited, not formalized here*.  Read as a
+   statement about `R(Cu, Cv, 0)`, the theorem below is therefore conditional
+   on that published cardinality reduction.
 3. **Value, not uniqueness.**  The theorem says that the Z/S value is not
    exceeded.  It does not claim that the Z/S pair is the *only* maximiser.
 

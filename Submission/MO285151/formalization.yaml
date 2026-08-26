@@ -43,11 +43,11 @@ project:
     no axiom.
     
     Scope, stated once for all three results. The channels are binary on both sides. For (1) this
-    is the setting of the source question. For (2) and (3) the reduction of the double-sided
-    bottleneck over arbitrary alphabets to binary test channels is Proposition 3 of the
-    Dikshtein-Ordentlich-Shamai paper and Proposition 4.3 of the Pichler-Piantanida-Matz paper; it
-    is cited here, not formalized, so read as statements about R(Cu, Cv, 0) with unrestricted
-    alphabets, (2) and (3) are conditional on that published cardinality bound. Conjecture 2 is
+    is the setting of the source question. For (2) and (3) it is a genuine restriction:
+    Conjectures 1 and 2 are stated for R(Cu, Cv, 0), whose maximisation ranges over test channels
+    with unrestricted alphabets, and that binary U and V suffice for a DSBS is Proposition 3 of the
+    Dikshtein-Ordentlich-Shamai paper, cited here and not formalized. Read as statements about
+    R(Cu, Cv, 0), (2) and (3) are therefore conditional on that published cardinality bound. Conjecture 2 is
     stated in its minimisation form, min I(U;V) at fixed rates; the identity
     I(U;V) = I(U;X) + I(V;X) - I(X;U,V) that turns the paper's maximisation of I(X;U,V) into
     that minimisation is the authors' own, given as Remark 5 of the same paper, and is likewise
