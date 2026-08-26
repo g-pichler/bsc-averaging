@@ -243,20 +243,20 @@ lemma phi_antitoneOn (Y : ℝ) :
   rw [he] at this
   linarith
 
-/-- **(♦)** of §7c⁗ step 5: `m·M_v(m−X) ≥ (m−X)·M_m(v−X)` for `X ≥ 0`,
-`0 < m−X`.  Both sides are `Φ(g, Y−g)` for the *same* `Y = m+v−X`, so it is
+/-- **(♦)** of §7c⁗ step 5: `m·M_v(m−xi) ≥ (m−xi)·M_m(v−xi)` for `xi ≥ 0`,
+`0 < m−xi`.  Both sides are `Φ(g, Y−g)` for the *same* `Y = m+v−xi`, so it is
 `ϕ` decreasing. -/
-theorem diamond {m v X : ℝ} (hmX : 0 < m - X) (hX : 0 ≤ X) :
-    (m - X) * MG m (v - X) ≤ m * MG v (m - X) := by
+theorem diamond {m v xi : ℝ} (hmX : 0 < m - xi) (hX : 0 ≤ xi) :
+    (m - xi) * MG m (v - xi) ≤ m * MG v (m - xi) := by
   have hm : 0 < m := by linarith
-  set Y := m + v - X with hY
-  have e1 : MG v (m - X) = LC Y - LC (Y - 2 * (m - X)) := by
+  set Y := m + v - xi with hY
+  have e1 : MG v (m - xi) = LC Y - LC (Y - 2 * (m - xi)) := by
     simp only [MG, hY]
-    rw [show m - X + v = m + v - X by ring, show m - X - v = -(m + v - X - 2 * (m - X)) by ring,
+    rw [show m - xi + v = m + v - xi by ring, show m - xi - v = -(m + v - xi - 2 * (m - xi)) by ring,
       LC_even]
-  have e2 : MG m (v - X) = LC Y - LC (Y - 2 * m) := by
+  have e2 : MG m (v - xi) = LC Y - LC (Y - 2 * m) := by
     simp only [MG, hY]
-    rw [show v - X + m = m + v - X by ring, show v - X - m = m + v - X - 2 * m by ring]
+    rw [show v - xi + m = m + v - xi by ring, show v - xi - m = m + v - xi - 2 * m by ring]
   have hmono := phi_antitoneOn Y (Set.mem_Ioi.mpr hmX) (Set.mem_Ioi.mpr hm) (by linarith)
   rw [e1, e2]
   rw [div_le_div_iff₀ (by linarith) (by linarith)] at hmono
@@ -329,58 +329,58 @@ lemma hasDerivAt_MGp (n w : ℝ) :
     simpa [Function.comp_def] using h
   exact h1.sub h2
 
-/-- The deficit of `M_n` against its chord over `[X−m, X+m]`. -/
-noncomputable def Dfun (n m X : ℝ) (w : ℝ) : ℝ :=
-  MG n w - (MG n (X - m) + (MG n (X + m) - MG n (X - m)) * (w - (X - m)) / (2 * m))
+/-- The deficit of `M_n` against its chord over `[xi−m, xi+m]`. -/
+noncomputable def Dfun (n m xi : ℝ) (w : ℝ) : ℝ :=
+  MG n w - (MG n (xi - m) + (MG n (xi + m) - MG n (xi - m)) * (w - (xi - m)) / (2 * m))
 
 /-- `L(·−v)` minus its chord over the same window. -/
-noncomputable def Kfun (v m X : ℝ) (w : ℝ) : ℝ :=
+noncomputable def Kfun (v m xi : ℝ) (w : ℝ) : ℝ :=
   LC (w - v)
-    - (LC (X - m - v) + (LC (X + m - v) - LC (X - m - v)) * (w - (X - m)) / (2 * m))
+    - (LC (xi - m - v) + (LC (xi + m - v) - LC (xi - m - v)) * (w - (xi - m)) / (2 * m))
 
-lemma Dfun_left {n m X : ℝ} : Dfun n m X (X - m) = 0 := by simp [Dfun]
+lemma Dfun_left {n m xi : ℝ} : Dfun n m xi (xi - m) = 0 := by simp [Dfun]
 
-lemma Dfun_right {n m X : ℝ} (hm : 0 < m) : Dfun n m X (X + m) = 0 := by
+lemma Dfun_right {n m xi : ℝ} (hm : 0 < m) : Dfun n m xi (xi + m) = 0 := by
   simp only [Dfun]
-  have : X + m - (X - m) = 2 * m := by ring
+  have : xi + m - (xi - m) = 2 * m := by ring
   rw [this]
   field_simp
   ring
 
-lemma Kfun_left {v m X : ℝ} : Kfun v m X (X - m) = 0 := by simp [Kfun]
+lemma Kfun_left {v m xi : ℝ} : Kfun v m xi (xi - m) = 0 := by simp [Kfun]
 
-lemma Kfun_right {v m X : ℝ} (hm : 0 < m) : Kfun v m X (X + m) = 0 := by
+lemma Kfun_right {v m xi : ℝ} (hm : 0 < m) : Kfun v m xi (xi + m) = 0 := by
   simp only [Kfun]
-  have h1 : X + m - (X - m) = 2 * m := by ring
-  have h2 : X + m - v = X + m - v := rfl
+  have h1 : xi + m - (xi - m) = 2 * m := by ring
+  have h2 : xi + m - v = xi + m - v := rfl
   rw [h1]
   field_simp
   ring
 
-lemma hasDerivAt_Dfun (n m X w : ℝ) (hm : 0 < m) :
-    HasDerivAt (Dfun n m X)
+lemma hasDerivAt_Dfun (n m xi w : ℝ) (hm : 0 < m) :
+    HasDerivAt (Dfun n m xi)
       ((Real.tanh (w + n) - Real.tanh (w - n))
-        - (MG n (X + m) - MG n (X - m)) / (2 * m)) w := by
+        - (MG n (xi + m) - MG n (xi - m)) / (2 * m)) w := by
   have h1 : HasDerivAt (fun w : ℝ =>
-      MG n (X - m) + (MG n (X + m) - MG n (X - m)) * (w - (X - m)) / (2 * m))
-      ((MG n (X + m) - MG n (X - m)) / (2 * m)) w := by
-    have h := (((hasDerivAt_id w).sub_const (X - m)).const_mul
-      (MG n (X + m) - MG n (X - m))).div_const (2 * m)
-    exact hd_congr (h.const_add (MG n (X - m))) (by ring)
+      MG n (xi - m) + (MG n (xi + m) - MG n (xi - m)) * (w - (xi - m)) / (2 * m))
+      ((MG n (xi + m) - MG n (xi - m)) / (2 * m)) w := by
+    have h := (((hasDerivAt_id w).sub_const (xi - m)).const_mul
+      (MG n (xi + m) - MG n (xi - m))).div_const (2 * m)
+    exact hd_congr (h.const_add (MG n (xi - m))) (by ring)
   exact (hasDerivAt_MG n w).sub h1
 
-lemma hasDerivAt_Kfun (v m X w : ℝ) (hm : 0 < m) :
-    HasDerivAt (Kfun v m X)
-      (Real.tanh (w - v) - (LC (X + m - v) - LC (X - m - v)) / (2 * m)) w := by
+lemma hasDerivAt_Kfun (v m xi w : ℝ) (hm : 0 < m) :
+    HasDerivAt (Kfun v m xi)
+      (Real.tanh (w - v) - (LC (xi + m - v) - LC (xi - m - v)) / (2 * m)) w := by
   have h0 : HasDerivAt (fun w : ℝ => LC (w - v)) (Real.tanh (w - v)) w := by
     have h := (hasDerivAt_LC (w - v)).comp w ((hasDerivAt_id w).sub_const v)
     simpa [Function.comp_def] using h
   have h1 : HasDerivAt (fun w : ℝ =>
-      LC (X - m - v) + (LC (X + m - v) - LC (X - m - v)) * (w - (X - m)) / (2 * m))
-      ((LC (X + m - v) - LC (X - m - v)) / (2 * m)) w := by
-    have h := (((hasDerivAt_id w).sub_const (X - m)).const_mul
-      (LC (X + m - v) - LC (X - m - v))).div_const (2 * m)
-    exact hd_congr (h.const_add (LC (X - m - v))) (by ring)
+      LC (xi - m - v) + (LC (xi + m - v) - LC (xi - m - v)) * (w - (xi - m)) / (2 * m))
+      ((LC (xi + m - v) - LC (xi - m - v)) / (2 * m)) w := by
+    have h := (((hasDerivAt_id w).sub_const (xi - m)).const_mul
+      (LC (xi + m - v) - LC (xi - m - v))).div_const (2 * m)
+    exact hd_congr (h.const_add (LC (xi - m - v))) (by ring)
   exact h0.sub h1
 
 /-- A function with nonincreasing derivative and zero boundary values is
@@ -410,36 +410,36 @@ lemma nonneg_of_antitone_deriv_zero_ends {H H' : ℝ → ℝ} {a b : ℝ} (hab :
   linarith
 
 /-- `K ≤ 0` on the window: `L(·−v)` lies below its chord. -/
-lemma Kfun_nonpos {v m X : ℝ} (hm : 0 < m) {w : ℝ}
-    (hw : w ∈ Set.Icc (X - m) (X + m)) : Kfun v m X w ≤ 0 := by
-  set E := (LC (X + m - v) - LC (X - m - v)) / (2 * m) with hE
-  have hd : ∀ z : ℝ, HasDerivAt (fun z : ℝ => - Kfun v m X z) (E - Real.tanh (z - v)) z := by
+lemma Kfun_nonpos {v m xi : ℝ} (hm : 0 < m) {w : ℝ}
+    (hw : w ∈ Set.Icc (xi - m) (xi + m)) : Kfun v m xi w ≤ 0 := by
+  set E := (LC (xi + m - v) - LC (xi - m - v)) / (2 * m) with hE
+  have hd : ∀ z : ℝ, HasDerivAt (fun z : ℝ => - Kfun v m xi z) (E - Real.tanh (z - v)) z := by
     intro z
-    exact hd_congr (hasDerivAt_Kfun v m X z hm).neg (by rw [hE]; ring)
-  have hanti : AntitoneOn (fun z : ℝ => E - Real.tanh (z - v)) (Set.Icc (X - m) (X + m)) := by
+    exact hd_congr (hasDerivAt_Kfun v m xi z hm).neg (by rw [hE]; ring)
+  have hanti : AntitoneOn (fun z : ℝ => E - Real.tanh (z - v)) (Set.Icc (xi - m) (xi + m)) := by
     intro p _ q _ hpq
     have := tanh_monotone (show p - v ≤ q - v by linarith)
     simpa using by linarith
-  have := nonneg_of_antitone_deriv_zero_ends (by linarith : X - m < X + m) hd hanti
+  have := nonneg_of_antitone_deriv_zero_ends (by linarith : xi - m < xi + m) hd hanti
     (by rw [Kfun_left]; ring) (by rw [Kfun_right hm]; ring) hw
   linarith
 
 /-- **The Green identity for the window**: the residual equals `∫ M_n″·K`. -/
-theorem residual_green {m n v X : ℝ} (hm : 0 < m) :
-    (∫ w in (X - m)..(X + m), Dfun n m X w * (1 / Real.cosh (w - v) ^ 2))
-      = ∫ w in (X - m)..(X + m), MGpp n w * Kfun v m X w := by
-  have hDd : ∀ w : ℝ, HasDerivAt (Dfun n m X)
+theorem residual_green {m n v xi : ℝ} (hm : 0 < m) :
+    (∫ w in (xi - m)..(xi + m), Dfun n m xi w * (1 / Real.cosh (w - v) ^ 2))
+      = ∫ w in (xi - m)..(xi + m), MGpp n w * Kfun v m xi w := by
+  have hDd : ∀ w : ℝ, HasDerivAt (Dfun n m xi)
       ((Real.tanh (w + n) - Real.tanh (w - n))
-        - (MG n (X + m) - MG n (X - m)) / (2 * m)) w := fun w => hasDerivAt_Dfun n m X w hm
+        - (MG n (xi + m) - MG n (xi - m)) / (2 * m)) w := fun w => hasDerivAt_Dfun n m xi w hm
   have hDd' : ∀ w : ℝ, HasDerivAt (fun w : ℝ => (Real.tanh (w + n) - Real.tanh (w - n))
-      - (MG n (X + m) - MG n (X - m)) / (2 * m)) (MGpp n w) w := by
+      - (MG n (xi + m) - MG n (xi - m)) / (2 * m)) (MGpp n w) w := by
     intro w
     exact (hasDerivAt_MGp n w).sub_const _
-  have hKd : ∀ w : ℝ, HasDerivAt (Kfun v m X)
-      (Real.tanh (w - v) - (LC (X + m - v) - LC (X - m - v)) / (2 * m)) w :=
-    fun w => hasDerivAt_Kfun v m X w hm
+  have hKd : ∀ w : ℝ, HasDerivAt (Kfun v m xi)
+      (Real.tanh (w - v) - (LC (xi + m - v) - LC (xi - m - v)) / (2 * m)) w :=
+    fun w => hasDerivAt_Kfun v m xi w hm
   have hKd' : ∀ w : ℝ, HasDerivAt (fun w : ℝ =>
-      Real.tanh (w - v) - (LC (X + m - v) - LC (X - m - v)) / (2 * m))
+      Real.tanh (w - v) - (LC (xi + m - v) - LC (xi - m - v)) / (2 * m))
       (1 / Real.cosh (w - v) ^ 2) w := by
     intro w
     have h := (hasDerivAt_tanh (w - v)).comp w ((hasDerivAt_id w).sub_const v)
@@ -449,7 +449,7 @@ theorem residual_green {m n v X : ℝ} (hm : 0 < m) :
   have hcosh : ∀ z : ℝ, Real.cosh z ≠ 0 := fun z => ne_of_gt (Real.cosh_pos z)
   have cLCs : ∀ c : ℝ, Continuous (fun w : ℝ => LC (w + c)) :=
     fun c => continuous_LC.comp (by fun_prop)
-  have cD : Continuous (Dfun n m X) := by
+  have cD : Continuous (Dfun n m xi) := by
     unfold Dfun MG
     exact ((cLCs n).sub (by
       have := cLCs (-n); simpa [sub_eq_add_neg] using this)).sub (by fun_prop)
@@ -460,7 +460,7 @@ theorem residual_green {m n v X : ℝ} (hm : 0 < m) :
         (fun x => pow_ne_zero 2 (ne_of_gt (Real.cosh_pos _)))
     · exact continuous_const.div (by fun_prop)
         (fun x => pow_ne_zero 2 (ne_of_gt (Real.cosh_pos _)))
-  have cK : Continuous (Kfun v m X) := by
+  have cK : Continuous (Kfun v m xi) := by
     unfold Kfun
     refine Continuous.sub ?_ (by fun_prop)
     have := cLCs (-v); simpa [sub_eq_add_neg] using this
@@ -489,13 +489,13 @@ lemma pos_of_strictAnti_deriv_zero_ends {H H' : ℝ → ℝ} {a b : ℝ}
     ⟨le_of_lt (lt_trans h1 hξ₂.1), le_of_lt hξ₂.2⟩ (lt_trans hξ₁.2 hξ₂.1)
   linarith
 
-lemma Kfun_neg {v m X : ℝ} (hm : 0 < m) {w : ℝ}
-    (hw : w ∈ Set.Ioo (X - m) (X + m)) : Kfun v m X w < 0 := by
-  set E := (LC (X + m - v) - LC (X - m - v)) / (2 * m) with hE
-  have hd : ∀ z : ℝ, HasDerivAt (fun z : ℝ => - Kfun v m X z) (E - Real.tanh (z - v)) z := by
+lemma Kfun_neg {v m xi : ℝ} (hm : 0 < m) {w : ℝ}
+    (hw : w ∈ Set.Ioo (xi - m) (xi + m)) : Kfun v m xi w < 0 := by
+  set E := (LC (xi + m - v) - LC (xi - m - v)) / (2 * m) with hE
+  have hd : ∀ z : ℝ, HasDerivAt (fun z : ℝ => - Kfun v m xi z) (E - Real.tanh (z - v)) z := by
     intro z
-    exact hd_congr (hasDerivAt_Kfun v m X z hm).neg (by rw [hE]; ring)
-  have hanti : StrictAntiOn (fun z : ℝ => E - Real.tanh (z - v)) (Set.Icc (X - m) (X + m)) := by
+    exact hd_congr (hasDerivAt_Kfun v m xi z hm).neg (by rw [hE]; ring)
+  have hanti : StrictAntiOn (fun z : ℝ => E - Real.tanh (z - v)) (Set.Icc (xi - m) (xi + m)) := by
     intro p _ q _ hpq
     have hstr : StrictMono Real.tanh := by
       apply strictMono_of_deriv_pos
@@ -566,28 +566,28 @@ lemma continuous_MGpp (n : ℝ) : Continuous (MGpp n) := by
 noncomputable def RS (m n u v : ℝ) : ℝ :=
   ∫ w in (u + v - m)..(u + v + m), Dfun n m (u + v) w * (1 / Real.cosh (w - v) ^ 2)
 
-private lemma cont_integrand (n v m X : ℝ) :
-    Continuous (fun w : ℝ => MGpp n w * Kfun v m X w) := by
+private lemma cont_integrand (n v m xi : ℝ) :
+    Continuous (fun w : ℝ => MGpp n w * Kfun v m xi w) := by
   have cLCs : ∀ c : ℝ, Continuous (fun w : ℝ => LC (w + c)) :=
     fun c => continuous_LC.comp (by fun_prop)
   have cMGpp : Continuous (MGpp n) := continuous_MGpp n
-  have cK : Continuous (Kfun v m X) := by
+  have cK : Continuous (Kfun v m xi) := by
     unfold Kfun
     refine Continuous.sub ?_ (by fun_prop)
     have := cLCs (-v); simpa [sub_eq_add_neg] using this
   exact cMGpp.mul cK
 
-/-- **(★)** of §7c⁗: for `v > 0` and `X = u+v ≥ 0` the residual is strictly
+/-- **(★)** of §7c⁗: for `v > 0` and `xi = u+v ≥ 0` the residual is strictly
 positive. -/
 theorem residual_pos {m n u v : ℝ} (hm : 0 < m) (hn : 0 < n) (hv : 0 ≤ v)
     (hX : 0 ≤ u + v) (hne : 0 < v ∨ 0 < u + v) : 0 < RS m n u v := by
-  set X := u + v with hXdef
-  set F : ℝ → ℝ := fun w => MGpp n w * Kfun v m X w with hF
-  have hcont : Continuous F := cont_integrand n v m X
+  set xi := u + v with hXdef
+  set F : ℝ → ℝ := fun w => MGpp n w * Kfun v m xi w with hF
+  have hcont : Continuous F := cont_integrand n v m xi
   rw [RS, ← hXdef, residual_green hm]
-  show (0:ℝ) < ∫ w in (X - m)..(X + m), F w
-  have hab : X - m < X + m := by linarith
-  rcases le_or_gt m X with hmX | hmX
+  show (0:ℝ) < ∫ w in (xi - m)..(xi + m), F w
+  have hab : xi - m < xi + m := by linarith
+  rcases le_or_gt m xi with hmX | hmX
   · -- the window lies in the concave half
     apply intervalIntegral.intervalIntegral_pos_of_pos_on
       (hcont.intervalIntegrable _ _) _ hab
@@ -595,10 +595,10 @@ theorem residual_pos {m n u v : ℝ} (hm : 0 < m) (hn : 0 < n) (hv : 0 ≤ v)
     have hw0 : 0 < w := lt_of_le_of_lt (by linarith) hw.1
     exact mul_pos_of_neg_of_neg (MGpp_neg hn hw0) (Kfun_neg hm ⟨hw.1, hw.2⟩)
   · -- fold the symmetric part
-    set c := m - X with hc
+    set c := m - xi with hc
     have hc0 : 0 < c := by simp only [hc]; linarith
-    have hcb : c ≤ X + m := by simp only [hc]; linarith
-    have hac : X - m = -c := by simp only [hc]; ring
+    have hcb : c ≤ xi + m := by simp only [hc]; linarith
+    have hac : xi - m = -c := by simp only [hc]; ring
     -- the reflected integrand
     have hrefl : ∀ t : ℝ, F (-t) + F t = MGpp n t * (- MG v t - t * MG m u / m) := by
       intro t
@@ -636,23 +636,23 @@ theorem residual_pos {m n u v : ℝ} (hm : 0 < m) (hn : 0 < n) (hv : 0 ≤ v)
         linarith
       · -- `u < 0`: then `v > 0` automatically, and we use `M_v(t)/t` decreasing and (♦)
         have hv0 : 0 < v := by simp only [hXdef] at hX; linarith
-        have hvX : 0 < v - X := by simp only [hXdef]; linarith
+        have hvX : 0 < v - xi := by simp only [hXdef]; linarith
         have hmono := MG_div_antitoneOn hv0 (Set.mem_Ioi.mpr ht0) (Set.mem_Ioi.mpr hc0) htc
-        have hd := diamond (m := m) (v := v) (X := X) (by simp only [hc] at hc0; linarith) hX
-        have hMu : MG m u = - MG m (v - X) := by
-          have : u = -(v - X) := by simp only [hXdef]; ring
+        have hd := diamond (m := m) (v := v) (xi := xi) (by simp only [hc] at hc0; linarith) hX
+        have hMu : MG m u = - MG m (v - xi) := by
+          have : u = -(v - xi) := by simp only [hXdef]; ring
           rw [this, MG_odd]
         rw [hMu]
-        have hcv : MG m (v - X) / m ≤ MG v c / c := by
+        have hcv : MG m (v - xi) / m ≤ MG v c / c := by
           rw [div_le_div_iff₀ hm hc0]
           simp only [hc]
           linarith [hd]
-        have h1 : MG m (v - X) / m ≤ MG v t / t := le_trans hcv hmono
-        have h2 : t * (MG m (v - X) / m) ≤ MG v t := by
+        have h1 : MG m (v - xi) / m ≤ MG v t / t := le_trans hcv hmono
+        have h2 : t * (MG m (v - xi) / m) ≤ MG v t := by
           have := mul_le_mul_of_nonneg_left h1 (le_of_lt ht0)
           rw [mul_div_cancel₀ _ (ne_of_gt ht0)] at this
           linarith [this]
-        have : t * (- MG m (v - X)) / m = - (t * (MG m (v - X) / m)) := by ring
+        have : t * (- MG m (v - xi)) / m = - (t * (MG m (v - xi) / m)) := by ring
         rw [this]
         linarith
     have hpiece1 : 0 ≤ ∫ t in (0:ℝ)..c, MGpp n t * (- MG v t - t * MG m u / m) := by
@@ -663,25 +663,25 @@ theorem residual_pos {m n u v : ℝ} (hm : 0 < m) (hn : 0 < n) (hv : 0 ≤ v)
       · have h1 := MGpp_neg hn h
         have h2 := hkey t h ht.2
         nlinarith
-    have hpiece2 : 0 ≤ ∫ w in c..(X + m), F w := by
+    have hpiece2 : 0 ≤ ∫ w in c..(xi + m), F w := by
       apply intervalIntegral.integral_nonneg hcb
       intro w hw
       have hw0 : 0 < w := lt_of_lt_of_le hc0 hw.1
       have h1 := MGpp_neg hn hw0
-      have h2 := Kfun_nonpos (v := v) (m := m) (X := X) hm
+      have h2 := Kfun_nonpos (v := v) (m := m) (xi := xi) hm
         (w := w) ⟨by simp only [hac]; linarith [hw.1, hc0], hw.2⟩
       simp only [hF]
       nlinarith
-    have hsum : (∫ w in (X - m)..c, F w) + (∫ w in c..(X + m), F w)
-        = ∫ w in (X - m)..(X + m), F w :=
+    have hsum : (∫ w in (xi - m)..c, F w) + (∫ w in c..(xi + m), F w)
+        = ∫ w in (xi - m)..(xi + m), F w :=
       intervalIntegral.integral_add_adjacent_intervals
         (hcont.intervalIntegrable _ _) (hcont.intervalIntegrable _ _)
     rw [← hsum, hac, hfold]
     rcases eq_or_lt_of_le hX with hX0 | hX0
-    · -- `X = 0`: the symmetric part is strictly positive
+    · -- `xi = 0`: the symmetric part is strictly positive
       have hcm : c = m := by simp only [hc, ← hX0]; ring
-      have hz : (∫ w in c..(X + m), F w) = 0 := by
-        have : c = X + m := by simp only [hcm, ← hX0]; ring
+      have hz : (∫ w in c..(xi + m), F w) = 0 := by
+        have : c = xi + m := by simp only [hcm, ← hX0]; ring
         rw [this, intervalIntegral.integral_same]
       rw [hz, add_zero]
       have hcf : Continuous (fun t : ℝ => MGpp n t * (- MG v t - t * MG m u / m)) :=
@@ -707,9 +707,9 @@ theorem residual_pos {m n u v : ℝ} (hm : 0 < m) (hn : 0 < n) (hv : 0 ≤ v)
       have : t * -MG v m / m = - (t * (MG v m / m)) := by ring
       rw [this]
       linarith
-    · -- `X > 0`: the outer part is strictly positive
-      have hcb' : c < X + m := by simp only [hc]; linarith
-      have hpos : 0 < ∫ w in c..(X + m), F w := by
+    · -- `xi > 0`: the outer part is strictly positive
+      have hcb' : c < xi + m := by simp only [hc]; linarith
+      have hpos : 0 < ∫ w in c..(xi + m), F w := by
         apply intervalIntegral.intervalIntegral_pos_of_pos_on
           (hcont.intervalIntegrable _ _) _ hcb'
         intro w hw
@@ -718,11 +718,11 @@ theorem residual_pos {m n u v : ℝ} (hm : 0 < m) (hn : 0 < n) (hv : 0 ≤ v)
           (Kfun_neg hm ⟨by simp only [hac]; linarith [hw.1, hc0], hw.2⟩)
       linarith
 
-/-- The deficit is odd under `(X,w) ↦ (−X,−w)`. -/
-lemma Dfun_odd {n m X w : ℝ} (hm : 0 < m) :
-    Dfun n m (-X) (-w) = - Dfun n m X w := by
+/-- The deficit is odd under `(xi,w) ↦ (−xi,−w)`. -/
+lemma Dfun_odd {n m xi w : ℝ} (hm : 0 < m) :
+    Dfun n m (-xi) (-w) = - Dfun n m xi w := by
   simp only [Dfun]
-  rw [show -X - m = -(X + m) by ring, show -X + m = -(X - m) by ring,
+  rw [show -xi - m = -(xi + m) by ring, show -xi + m = -(xi - m) by ring,
     MG_odd, MG_odd, MG_odd]
   field_simp
   ring
