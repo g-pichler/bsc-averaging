@@ -299,7 +299,9 @@ namespace BSCAveraging
 #print axioms mutualInfo_jointUV_eq_zero_of_degL
 #print axioms mutualInfo_jointUV_eq_zero_of_degR
 #print axioms zChan_rate
+#print axioms zChan_rate_snd
 #print axioms zChan_sChan_value
+#print axioms zChan_zChan_value
 #print axioms kerQR_eq
 #print axioms kernelSum_nonneg
 #print axioms fe_tanh

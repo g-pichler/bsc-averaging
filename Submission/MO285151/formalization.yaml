@@ -24,9 +24,13 @@ project:
     information bottleneck function R(Cu, Cv) = max I(U;V) subject to I(X;U) <= Cu and
     I(Y;V) <= Cv at p = 0, that is X = Y. Conjecture 1 predicts that the maximising test channels
     are a Z-channel and an S-channel; Conjecture 2 predicts that the pair maximising I(X;U,V) are
-    both Z-channels. Both are proved here for binary U and V, in value form: no admissible pair
-    exceeds the Z/S value `zsValue a d` (`conjecture1_p0_holds`), and none undercuts the Z/Z value
-    `mzsValue a d` (`conjecture2_p0_holds`), at every nondegenerate rate pair.
+    both Z-channels. Both are proved here for binary U and V, in optimality form: the Challenge
+    statements exhibit the conjectured channels themselves as `Chan` values and say that no
+    admissible pair beats them. No admissible pair exceeds the I(U;V) of the Z/S pair
+    (`conjecture1_p0_holds`), and none undercuts that of the Z/Z pair (`conjecture2_p0_holds`), at
+    every nondegenerate rate pair. A Z-channel and an S-channel are the same transition matrix up
+    to relabelling the input alphabet, so what the two conjectures distinguish is the relative
+    orientation of the two sides: anti-aligned for the maximum, aligned for the minimum.
     
     The development is sorry-free and contains no hand-written axiom declaration.
     `averaged_bsc_maximise_mutual_information` and `conjecture2_p0_holds` depend only on `propext`,

@@ -31,23 +31,33 @@ channels of the binary channel polytope at a given rate.
 
 ## What is stated here
 
-`conjecture1_p0` is the value form of that conjecture: at the rate pair
-realised by the Z/S pair with parameters `(a, d)`, no admissible pair of binary
-channels achieves more than the Z/S value.
+The conjectured optimum is exhibited as an actual pair of channels rather than
+as a closed-form number.  `zChan a` and `sChan d` are the two transition
+matrices themselves: in `zChan a` the input `false` is transmitted without
+error, in `sChan d` the input `true` is.  The statement then says, of that pair:
 
-* `zsRate a` is the rate `I(X;U)` of the Z-channel with parameter `a`, in closed
-  form `(f_e(a) + a·log 2)/(1 + a)`, and it is also the rate `I(Y;V)` of the
-  S-channel with parameter `a`.  It is continuous and strictly increasing on
-  `[0,1]` with `zsRate 0 = 0` and `zsRate 1 = log 2`, so as `(a, d)` ranges over
-  `(0,1)²` the constraint pair `(zsRate a, zsRate d)` ranges over exactly the
-  nondegenerate rate pairs in `(0, log 2)²`.  Parametrising the rate constraints
-  by `(a, d)` is therefore no loss of generality; it is what makes the
-  right-hand side a closed form.
-* `zsValue a d` is `I(U;V)` for the Z/S pair with those parameters.
+* their rates are the constraint — `cL` is admissible when `I(U;X)` does not
+  exceed `I` of `zChan a`, and `cR` when `I(Y;V)` does not exceed that of
+  `sChan d`;
+* their value is the bound — no admissible pair achieves a larger `I(U;V)`
+  than the pair `(zChan a, sChan d)` does.
 
-So the statement reads: for all `a, d ∈ (0,1)` and all binary channels `cL, cR`
-with `I(U;X) ≤ zsRate a` and `I(Y;V) ≤ zsRate d`, one has
-`I(U;V) ≤ zsValue a d`.
+Nothing in the statement is a closed form, and nothing is specific to this
+development: it mentions only `Chan`, the source `dsbs`, the three joint laws,
+`mutualInfo`, and the two transition matrices.
+
+The two channels share one rate function, continuous and strictly increasing in
+the parameter, running from `0` at `0` to `log 2` at `1`, so as `(a, d)` ranges
+over `(0,1)²` the constraint pair ranges over exactly the nondegenerate rate
+pairs in `(0, log 2)²`.  Parametrising the rate constraints by `(a, d)` is
+therefore no loss of generality.
+
+A remark on Z versus S.  The two are the same channel up to relabelling the
+*input* alphabet, so what distinguishes a pair is only the *relative*
+orientation of its two sides, both of which here see the same `X`.  Writing the
+maximiser as a Z against an S is exactly the statement that the two sides are
+anti-aligned: the output letter of `cL` that determines `X` and the output
+letter of `cR` that determines `Y` point at opposite values.
 
 ## Scope, and what is *not* claimed
 
@@ -133,42 +143,64 @@ noncomputable def jointUV (p : ℝ) (cL cR : Chan) (u v : Bool) : ℝ :=
     + dsbs p true false * cL.tr true u * cR.tr false v
     + dsbs p true true * cL.tr true u * cR.tr true v
 
-/-! ## The rate and the value of the conjectured optimum -/
+/-! ## The two corner channels -/
 
-/-- `f_e(y) = ∫₀^y artanh`. -/
-noncomputable def fe (y : ℝ) : ℝ := ((1 + y) * log (1 + y) + (1 - y) * log (1 - y)) / 2
+/-- The Z-channel with interior atom `a`: input `false` never produces `true`. -/
+noncomputable def zChanTr (a : ℝ) (x u : Bool) : ℝ :=
+  bif u then (bif x then 2 * a / (1 + a) else 0)
+        else (bif x then (1 - a) / (1 + a) else 1)
 
-/-- The rate of a Z-channel with interior atom `a`: `(f_e(a) + a·log 2)/(1+a)`.
-It is also the rate of the S-channel with parameter `a`. -/
-noncomputable def zsRate (a : ℝ) : ℝ := (fe a + a * log 2) / (1 + a)
+/-- The Z-channel with parameter `a ∈ (0,1)`. -/
+noncomputable def zChan (a : ℝ) (ha0 : 0 < a) (ha1 : a < 1) : Chan where
+  tr := zChanTr a
+  nonneg i j := by
+    have h : (0:ℝ) < 1 + a := by linarith
+    have h1 : (0:ℝ) ≤ (1 - a) / (1 + a) := by positivity
+    have h2 : (0:ℝ) ≤ 2 * a / (1 + a) := by positivity
+    cases i <;> cases j <;> simp only [zChanTr, cond_true, cond_false] <;> linarith
+  sum_one i := by
+    have h : (0:ℝ) < 1 + a := by linarith
+    cases i
+    · simp only [zChanTr, cond_true, cond_false]; norm_num
+    · simp only [zChanTr, cond_true, cond_false]; field_simp; ring
 
-/-- The Z/S branch value at `p = 0`, as a function of the two Z-parameters:
-`I(U;V)` when the `U`-side is the Z-channel with parameter `a` and the `V`-side
-is the S-channel with parameter `d`. -/
-noncomputable def zsValue (a d : ℝ) : ℝ :=
-  d / (1 + d) * log (1 + a) + (1 - a * d) / ((1 + a) * (1 + d)) * log (1 - a * d)
-    + a / (1 + a) * log (1 + d)
+/-- Transition matrix of the S-channel with parameter `d`: output `false`
+reveals `Y = false` with certainty. -/
+noncomputable def sChanTr (d : ℝ) (y v : Bool) : ℝ :=
+  bif y then (bif v then 1 else 0) else (bif v then (1 - d) / (1 + d) else 1 - (1 - d) / (1 + d))
+
+/-- The S-channel with parameter `d ∈ (0,1)`. -/
+noncomputable def sChan (d : ℝ) (hd0 : 0 < d) (hd1 : d < 1) : Chan where
+  tr := sChanTr d
+  nonneg i j := by
+    have h : (0:ℝ) < 1 + d := by linarith
+    have h1 : (1 - d) / (1 + d) ≤ 1 := by rw [div_le_one h]; linarith
+    have h2 : (0:ℝ) ≤ (1 - d) / (1 + d) := by positivity
+    cases i <;> cases j <;> simp only [sChanTr, cond_true, cond_false] <;> linarith
+  sum_one i := by
+    have h : (1:ℝ) + d ≠ 0 := by positivity
+    cases i <;> simp only [sChanTr, cond_true, cond_false] <;> ring
 
 namespace DSIB
 
-/-- **Conjecture 1 of Dikshtein–Ordentlich–Shamai at `p = 0`, in value form.**
+/-- **Conjecture 1 of Dikshtein–Ordentlich–Shamai at `p = 0`.**
 
-For a doubly symmetric binary source with `p = 0` (that is, `X = Y`), and for
-every pair of binary test channels `cL : X → U` and `cR : Y → V` obeying the
-rate constraints `I(U;X) ≤ zsRate a` and `I(Y;V) ≤ zsRate d`, the mutual
-information `I(U;V)` does not exceed `zsValue a d`, the value attained by the
-Z-channel/S-channel pair with those parameters.
+For a doubly symmetric binary source with `p = 0` (that is, `X = Y`): among all
+pairs of binary test channels `cL : X → U` and `cR : Y → V` whose rates do not
+exceed those of the Z-channel `zChan a` and the S-channel `sChan d`, none
+achieves a larger `I(U;V)` than the pair `(zChan a, sChan d)` itself.  That is
+Conjecture 1's assertion that the optimal test channels are a Z-channel and an
+S-channel.
 
-Since `zsRate` is a continuous strictly increasing bijection of `[0,1]` onto
-`[0, log 2]`, this covers every nondegenerate rate pair.  See the module
-documentation for the three scope limitations: `p = 0`, binary alphabets (the
-cardinality reduction is cited, not formalized), and value rather than
-uniqueness of the maximiser. -/
+See the module documentation for the three scope limitations: `p = 0`, binary
+alphabets (the cardinality reduction is cited, not formalized), and value
+rather than uniqueness of the maximiser. -/
 theorem conjecture1_p0 (a d : ℝ) (ha0 : 0 < a) (ha1 : a < 1) (hd0 : 0 < d) (hd1 : d < 1)
     (cL cR : Chan)
-    (hU : mutualInfo (jointUX cL) ≤ zsRate a)
-    (hV : mutualInfo (jointYV cR) ≤ zsRate d) :
-    mutualInfo (jointUV 0 cL cR) ≤ zsValue a d := by
+    (hU : mutualInfo (jointUX cL) ≤ mutualInfo (jointUX (zChan a ha0 ha1)))
+    (hV : mutualInfo (jointYV cR) ≤ mutualInfo (jointYV (sChan d hd0 hd1))) :
+    mutualInfo (jointUV 0 cL cR)
+      ≤ mutualInfo (jointUV 0 (zChan a ha0 ha1) (sChan d hd0 hd1)) := by
   sorry
 
 end DSIB

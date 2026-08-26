@@ -6,11 +6,13 @@ import BSCAveraging.CFinish
 The Challenge statement, discharged by `BSCAveraging.conjecture1_p0_holds`
 (`BSCAveraging/CFinish.lean`).
 
-The library states the conjecture as the `Prop` `BSCAveraging.Conjecture1_p0`
-(`BSCAveraging/Conj12.lean`), whose `V`-side rate constraint is written against
-the S-channel of parameter `d`.  `BSCAveraging.sChan_rate` identifies that rate
-with `zsRate d`, which is the form the Challenge uses; the two statements are
-therefore the same up to that rewrite.
+The Challenge phrases both the constraints and the bound in terms of the two
+channels themselves; the library works with the closed forms `zsRate` and
+`zsValue`.  Two identities in `BSCAveraging/Conj12.lean` bridge them:
+`zChan_rate`, identifying the Z-channel's rate with `zsRate a`, and
+`zChan_sChan_value`, identifying the Z/S pair's `I(U;V)` with `zsValue a d`.
+The `V`-side constraint needs no bridge: the library's `Conjecture1_p0` already
+states it against the S-channel of parameter `d`.
 
 ## Proof architecture
 
@@ -42,10 +44,12 @@ namespace BSCAveraging.DSIB
 /-- **Conjecture 1 of Dikshtein–Ordentlich–Shamai at `p = 0`, in value form.** -/
 theorem conjecture1_p0 (a d : ℝ) (ha0 : 0 < a) (ha1 : a < 1) (hd0 : 0 < d) (hd1 : d < 1)
     (cL cR : Chan)
-    (hU : mutualInfo (jointUX cL) ≤ zsRate a)
-    (hV : mutualInfo (jointYV cR) ≤ zsRate d) :
-    mutualInfo (jointUV 0 cL cR) ≤ zsValue a d :=
-  conjecture1_p0_holds a d ha0 ha1 hd0 hd1 cL cR hU
-    (by rw [sChan_rate hd0 hd1]; exact hV)
+    (hU : mutualInfo (jointUX cL) ≤ mutualInfo (jointUX (zChan a ha0 ha1)))
+    (hV : mutualInfo (jointYV cR) ≤ mutualInfo (jointYV (sChan d hd0 hd1))) :
+    mutualInfo (jointUV 0 cL cR)
+      ≤ mutualInfo (jointUV 0 (zChan a ha0 ha1) (sChan d hd0 hd1)) := by
+  rw [zChan_rate ha0 ha1] at hU
+  rw [zChan_sChan_value ha0 ha1 hd0 hd1]
+  exact conjecture1_p0_holds a d ha0 ha1 hd0 hd1 cL cR hU hV
 
 end BSCAveraging.DSIB

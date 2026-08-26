@@ -38,18 +38,36 @@ than deriving it; a reader who wants the conjecture in the paper's `I(X;U,V)`
 form must supply the identity.  This is the one gap between the paper's wording
 and the Lean statement, and it is recorded here deliberately.
 
-## What the constants mean
+## How the statement is phrased
 
-* `zsRate a` is the rate `I(X;U)` of a Z-channel with parameter `a`, in closed
-  form `(f_e(a) + a·log 2)/(1 + a)`.  It is continuous and strictly increasing
-  on `[0,1]` with `zsRate 0 = 0` and `zsRate 1 = log 2`, so as `(a, d)` ranges
-  over `(0,1)²` the rate pair `(zsRate a, zsRate d)` ranges over exactly the
-  nondegenerate pairs in `(0, log 2)²`.  Parametrising the constraints by
-  `(a, d)` is therefore no loss of generality.
-* `mzsValue a d` is `I(U;V)` for the conjectured minimizing Z/Z pair: the
-  `U`-side has atoms at `−a` with mass `1/(1+a)` and at `+1` with mass
-  `a/(1+a)`, and `phiZ d` is the corresponding atom value against the `V`-side
-  Z-channel with parameter `d`.
+The conjectured optimum is exhibited as an actual pair of channels rather than
+as a closed-form number.  `zChan a` is the Z-channel with parameter `a`: a
+`2 × 2` transition matrix whose input `false` is transmitted without error, so
+that one output letter determines `X`.  The statement then says, of the two
+Z-channels `zChan a` and `zChan d` themselves:
+
+* their rates are the constraint — `cL` is admissible when `I(U;X)` is at least
+  `I` of `zChan a`, and `cR` when `I(Y;V)` is at least that of `zChan d`;
+* their value is the bound — no admissible pair achieves a smaller `I(U;V)`
+  than the pair `(zChan a, zChan d)` does.
+
+Nothing in the statement is a closed form, and nothing is specific to this
+development: it mentions only `Chan`, the source `dsbs`, the three joint laws,
+`mutualInfo`, and the Z-channel's transition matrix.
+
+The Z-channel's rate `I(X;U)` is continuous and strictly increasing in
+`a`, running from `0` at `a = 0` to `log 2` at `a = 1`, so as `(a, d)` ranges
+over `(0,1)²` the constraint pair ranges over exactly the nondegenerate rate
+pairs in `(0, log 2)²`.  Parametrising the constraints by `(a, d)` is therefore
+no loss of generality.
+
+A remark on Z versus S.  A Z-channel and an S-channel are the same channel up
+to relabelling the *input* alphabet, so what distinguishes a pair is only the
+*relative* orientation of its two sides, both of which here see the same `X`.
+Conjecture 1's maximiser is the anti-aligned pair (a Z against an S) and
+Conjecture 2's minimiser is the aligned one, which may be written as Z against
+Z — the form the paper states, and the form used below — or equally as S
+against S, flipping both inputs being a symmetry of all three informations.
 
 ## Scope, and what is *not* claimed
 
@@ -129,38 +147,36 @@ noncomputable def jointUV (p : ℝ) (cL cR : Chan) (u v : Bool) : ℝ :=
     + dsbs p true false * cL.tr true u * cR.tr false v
     + dsbs p true true * cL.tr true u * cR.tr true v
 
-/-! ## The rate and the value of the conjectured optimum -/
+/-! ## The Z-channel -/
 
-/-- `f_e(y) = ∫₀^y artanh`. -/
-noncomputable def fe (y : ℝ) : ℝ := ((1 + y) * log (1 + y) + (1 - y) * log (1 - y)) / 2
+/-- The Z-channel with interior atom `a`: input `false` never produces `true`. -/
+noncomputable def zChanTr (a : ℝ) (x u : Bool) : ℝ :=
+  bif u then (bif x then 2 * a / (1 + a) else 0)
+        else (bif x then (1 - a) / (1 + a) else 1)
 
-/-- The rate of a Z-channel with interior atom `a`: `(f_e(a) + a·log 2)/(1+a)`. -/
-noncomputable def zsRate (a : ℝ) : ℝ := (fe a + a * log 2) / (1 + a)
-
-/-- `f(z) = (1+z)·log(1+z)`, the mutual-information kernel: at `p = 0` one has
-`I(U;V) = E f(S·T)` in the bias coordinates `S`, `T` of the two sides. -/
-noncomputable def fFun (z : ℝ) : ℝ := (1 + z) * log (1 + z)
-
-/-- The atom value at `p = 0` against the `V`-side Z-channel `T = (+1, −d)`:
-the contribution of a `U`-side atom at bias `s`. -/
-noncomputable def phiZ (d s : ℝ) : ℝ :=
-  (d / (1 + d)) * fFun s + (1 / (1 + d)) * fFun (-(d * s))
-
-/-- The value of the conjectured optimal pair for the **minimization** problem:
-the `U`-side has atoms at `−a` (mass `1/(1+a)`) and `+1` (mass `a/(1+a)`), the
-two contacts of the mirror certificate. -/
-noncomputable def mzsValue (a d : ℝ) : ℝ :=
-  (1 / (1 + a)) * phiZ d (-a) + (a / (1 + a)) * phiZ d 1
+/-- The Z-channel with parameter `a ∈ (0,1)`. -/
+noncomputable def zChan (a : ℝ) (ha0 : 0 < a) (ha1 : a < 1) : Chan where
+  tr := zChanTr a
+  nonneg i j := by
+    have h : (0:ℝ) < 1 + a := by linarith
+    have h1 : (0:ℝ) ≤ (1 - a) / (1 + a) := by positivity
+    have h2 : (0:ℝ) ≤ 2 * a / (1 + a) := by positivity
+    cases i <;> cases j <;> simp only [zChanTr, cond_true, cond_false] <;> linarith
+  sum_one i := by
+    have h : (0:ℝ) < 1 + a := by linarith
+    cases i
+    · simp only [zChanTr, cond_true, cond_false]; norm_num
+    · simp only [zChanTr, cond_true, cond_false]; field_simp; ring
 
 namespace DSIB
 
-/-- **Conjecture 2 of Dikshtein–Ordentlich–Shamai at `p = 0`, in value form.**
+/-- **Conjecture 2 of Dikshtein–Ordentlich–Shamai at `p = 0`.**
 
-For a doubly symmetric binary source with `p = 0` (that is, `X = Y`), and for
-every pair of binary test channels `cL : X → U` and `cR : Y → V` meeting the
-rates `zsRate a ≤ I(U;X)` and `zsRate d ≤ I(Y;V)`, the mutual information
-`I(U;V)` is at least `mzsValue a d`, the value attained by the Z/Z pair with
-those parameters.
+For a doubly symmetric binary source with `p = 0` (that is, `X = Y`): among all
+pairs of binary test channels `cL : X → U` and `cR : Y → V` whose rates are at
+least those of the two Z-channels `zChan a` and `zChan d`, none achieves a
+smaller `I(U;V)` than the pair `(zChan a, zChan d)` itself.  That is Conjecture
+2's assertion that the optimal test channels are both Z channels.
 
 By the paper's Remark 5, `I(U;V) = I(U;X) + I(V;X) − I(X;U,V)`, so at fixed
 rates this minimization is the paper's maximization of `I(X;U,V)`; see the
@@ -168,9 +184,10 @@ module documentation for that translation and for the other scope
 limitations. -/
 theorem conjecture2_p0 (a d : ℝ) (ha0 : 0 < a) (ha1 : a < 1) (hd0 : 0 < d) (hd1 : d < 1)
     (cL cR : Chan)
-    (hU : zsRate a ≤ mutualInfo (jointUX cL))
-    (hV : zsRate d ≤ mutualInfo (jointYV cR)) :
-    mzsValue a d ≤ mutualInfo (jointUV 0 cL cR) := by
+    (hU : mutualInfo (jointUX (zChan a ha0 ha1)) ≤ mutualInfo (jointUX cL))
+    (hV : mutualInfo (jointYV (zChan d hd0 hd1)) ≤ mutualInfo (jointYV cR)) :
+    mutualInfo (jointUV 0 (zChan a ha0 ha1) (zChan d hd0 hd1))
+      ≤ mutualInfo (jointUV 0 cL cR) := by
   sorry
 
 end DSIB

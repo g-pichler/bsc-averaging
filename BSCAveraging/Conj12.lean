@@ -1037,8 +1037,97 @@ theorem zChan_sChan_value (ha0 : 0 < a) (ha1 : a < 1) (hd0 : 0 < d) (hd1 : d < 1
   field_simp
   ring
 
+/-! ### The Z-channel on the `V`-side, and the Z/Z pair
 
+Conjecture 2's optimum is the *aligned* pair: a Z-channel on **both** sides, so
+that the two deterministic atoms agree (`s·t = +1`) instead of cancelling as
+they do in the Z/S pair of Conjecture 1.  The `V`-side computation is the mirror
+of `marg₁_zChan`/`biasOf_zChan` — the same transition matrix read down its
+columns — giving masses `(1/(1+d), d/(1+d))` and bias atoms `(d, −1)`.
 
+Note that `mzsValue` is *written* as the S/S pair: its `U`-side atoms are `+1`
+and `−a`, which is `sChan a` read on the `U`-side, and `phiZ d` encodes the
+`V`-side `(+1, −d)`, which is `sChan d`.  Flipping the input of **both**
+channels is a symmetry of `I(U;V)`, `I(U;X)` and `I(Y;V)` alike, so the S/S and
+Z/Z pairs have the same rates and the same value; `zChan_zChan_value` below is
+that fact, proved by evaluating the kernel sum rather than by a flip argument.
+The Z/Z form is the one the paper's Conjecture 2 states. -/
+
+lemma marg₂_zChan (hd0 : 0 < d) (hd1 : d < 1) :
+    marg₂ (jointYV (zChan d hd0 hd1)) false = 1 / (1 + d) ∧
+      marg₂ (jointYV (zChan d hd0 hd1)) true = d / (1 + d) := by
+  have h : (0:ℝ) < 1 + d := by linarith
+  constructor <;>
+    · simp only [marg₂, jointYV, zChan, zChanTr, cond_true, cond_false]
+      field_simp
+      ring
+
+lemma biasOfSnd_zChan (hd0 : 0 < d) (hd1 : d < 1) :
+    biasOfSnd (jointYV (zChan d hd0 hd1)) false = d ∧
+      biasOfSnd (jointYV (zChan d hd0 hd1)) true = -1 := by
+  have h : (0:ℝ) < 1 + d := by linarith
+  have hd : d ≠ 0 := ne_of_gt hd0
+  obtain ⟨hm0, hm1⟩ := marg₂_zChan hd0 hd1
+  constructor
+  · rw [biasOfSnd, hm0]
+    simp only [jointYV, zChan, zChanTr, cond_true, cond_false]
+    field_simp
+    ring
+  · rw [biasOfSnd, hm1]
+    simp only [jointYV, zChan, zChanTr, cond_true, cond_false]
+    field_simp
+    ring
+
+/-- **The Z-channel's rate, read on the `V`-side**, is again `zsRate`.  The
+mirror of `zChan_rate`; with `sChan_rate` it says the Z/Z and Z/S pairs sit at
+the *same* rate pair `(zsRate a, zsRate d)`, which is what lets the two
+conjectures be compared at a common constraint. -/
+theorem zChan_rate_snd (hd0 : 0 < d) (hd1 : d < 1) :
+    mutualInfo (jointYV (zChan d hd0 hd1)) = zsRate d := by
+  obtain ⟨hm0, hm1⟩ := marg₂_zChan hd0 hd1
+  obtain ⟨hb0, hb1⟩ := biasOfSnd_zChan hd0 hd1
+  have hrho : ∀ v, 0 < marg₂ (jointYV (zChan d hd0 hd1)) v := by
+    intro v; cases v
+    · rw [hm0]; positivity
+    · rw [hm1]; positivity
+  rw [mutualInfo_jointYV_eq_bias_closed hrho, hm0, hm1, hb0, hb1, fe_neg_one, zsRate]
+  have h : (1 : ℝ) + d ≠ 0 := by positivity
+  field_simp
+
+/-- **The Z/Z pair attains `mzsValue`.**  Unlike the Z/S pair, the aligned pair
+degenerates no cell: the four products `s·t` are `a·d`, `−a`, `−d` and `+1`, all
+`> −1`, so the *strict* kernel identity applies and the four atom values line up
+term by term with the two `phiZ` expansions of `mzsValue`. -/
+theorem zChan_zChan_value (ha0 : 0 < a) (ha1 : a < 1) (hd0 : 0 < d) (hd1 : d < 1) :
+    mutualInfo (jointUV 0 (zChan a ha0 ha1) (zChan d hd0 hd1)) = mzsValue a d := by
+  have ha : (0:ℝ) < 1 + a := by linarith
+  have hd : (0:ℝ) < 1 + d := by linarith
+  obtain ⟨hm0, hm1⟩ := marg₁_zChan ha0 ha1
+  obtain ⟨hb0, hb1⟩ := biasOf_zChan ha0 ha1
+  obtain ⟨hn0, hn1⟩ := marg₂_zChan hd0 hd1
+  obtain ⟨ht0, ht1⟩ := biasOfSnd_zChan hd0 hd1
+  have hpi : ∀ u, 0 < marg₁ (jointUX (zChan a ha0 ha1)) u := by
+    intro u; cases u
+    · rw [hm0]; positivity
+    · rw [hm1]; positivity
+  have hrho : ∀ v, 0 < marg₂ (jointYV (zChan d hd0 hd1)) v := by
+    intro v; cases v
+    · rw [hn0]; positivity
+    · rw [hn1]; positivity
+  have hker : ∀ u v, 0 < 1 + (1 - 2 * (0:ℝ)) * biasOf (jointUX (zChan a ha0 ha1)) u
+      * biasOfSnd (jointYV (zChan d hd0 hd1)) v := by
+    intro u v
+    cases u <;> cases v <;>
+      simp only [hb0, hb1, ht0, ht1] <;> nlinarith
+  rw [mutualInfo_jointUV_eq_kernel_sum 0 _ _ hpi hrho hker,
+    hm0, hm1, hb0, hb1, hn0, hn1, ht0, ht1]
+  have e1 : (1 - 2 * (0:ℝ)) * a * d = -(d * -a) := by ring
+  have e2 : (1 - 2 * (0:ℝ)) * a * -1 = -a := by ring
+  have e3 : (1 - 2 * (0:ℝ)) * -1 * d = -(d * 1) := by ring
+  have e4 : (1 - 2 * (0:ℝ)) * -1 * -1 = 1 := by ring
+  rw [e1, e2, e3, e4]
+  simp only [mzsValue, phiZ]
+  ring
 
 end Parts
 
