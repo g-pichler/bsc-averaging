@@ -780,8 +780,8 @@ section SChannel
 
 variable {d : ℝ}
 
-/-- Transition matrix of the S-channel with parameter `d`: output `false`
-reveals `Y = false` with certainty. -/
+/-- Transition matrix of the S-channel with parameter `d`: the *other*
+crossover vanishes, `P(V=0 | Y=1) = 0`, i.e. `tr true false = 0`. -/
 noncomputable def sChanTr (d : ℝ) (y v : Bool) : ℝ :=
   bif y then (bif v then 1 else 0) else (bif v then (1 - d) / (1 + d) else 1 - (1 - d) / (1 + d))
 

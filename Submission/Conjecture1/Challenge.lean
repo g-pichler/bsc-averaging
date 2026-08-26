@@ -33,8 +33,9 @@ channels of the binary channel polytope at a given rate.
 
 The conjectured optimum is exhibited as an actual pair of channels rather than
 as a closed-form number.  `zChan a` and `sChan d` are the two transition
-matrices themselves: in `zChan a` the input `false` is transmitted without
-error, in `sChan d` the input `true` is.  The statement then says, of that pair:
+matrices themselves: `zChan a` has `P(U=1 | X=0) = 0` and `sChan d` has
+`P(V=0 | Y=1) = 0`, one vanishing crossover each, and opposite ones.  The
+statement then says, of that pair:
 
 * their rates are the constraint — `cL` is admissible when `I(U;X)` does not
   exceed `I` of `zChan a`, and `cR` when `I(Y;V)` does not exceed that of
@@ -56,8 +57,8 @@ A remark on Z versus S.  The two are the same channel up to relabelling the
 *input* alphabet, so what distinguishes a pair is only the *relative*
 orientation of its two sides, both of which here see the same `X`.  Writing the
 maximiser as a Z against an S is exactly the statement that the two sides are
-anti-aligned: the output letter of `cL` that determines `X` and the output
-letter of `cR` that determines `Y` point at opposite values.
+anti-aligned: `cL` has `P(U=1 | X=0) = 0` while `cR` has `P(V=0 | Y=1) = 0`, so
+it is opposite crossovers that vanish on the two sides.
 
 ## Scope, and what is *not* claimed
 
@@ -145,7 +146,8 @@ noncomputable def jointUV (p : ℝ) (cL cR : Chan) (u v : Bool) : ℝ :=
 
 /-! ## The two corner channels -/
 
-/-- The Z-channel with interior atom `a`: input `false` never produces `true`. -/
+/-- The Z-channel with interior atom `a`: the crossover `P(U=1 | X=0)` vanishes,
+`tr false true = 0`. -/
 noncomputable def zChanTr (a : ℝ) (x u : Bool) : ℝ :=
   bif u then (bif x then 2 * a / (1 + a) else 0)
         else (bif x then (1 - a) / (1 + a) else 1)
@@ -164,8 +166,8 @@ noncomputable def zChan (a : ℝ) (ha0 : 0 < a) (ha1 : a < 1) : Chan where
     · simp only [zChanTr, cond_true, cond_false]; norm_num
     · simp only [zChanTr, cond_true, cond_false]; field_simp; ring
 
-/-- Transition matrix of the S-channel with parameter `d`: output `false`
-reveals `Y = false` with certainty. -/
+/-- Transition matrix of the S-channel with parameter `d`: the *other*
+crossover vanishes, `P(V=0 | Y=1) = 0`, i.e. `tr true false = 0`. -/
 noncomputable def sChanTr (d : ℝ) (y v : Bool) : ℝ :=
   bif y then (bif v then 1 else 0) else (bif v then (1 - d) / (1 + d) else 1 - (1 - d) / (1 + d))
 

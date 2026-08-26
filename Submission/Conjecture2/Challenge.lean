@@ -42,9 +42,9 @@ and the Lean statement, and it is recorded here deliberately.
 
 The conjectured optimum is exhibited as an actual pair of channels rather than
 as a closed-form number.  `zChan a` is the Z-channel with parameter `a`: a
-`2 × 2` transition matrix whose input `false` is transmitted without error, so
-that one output letter determines `X`.  The statement then says, of the two
-Z-channels `zChan a` and `zChan d` themselves:
+`2 × 2` transition matrix one of whose two crossover probabilities vanishes,
+`P(U=1 | X=0) = 0`.  The statement then says, of the two Z-channels `zChan a`
+and `zChan d` themselves:
 
 * their rates are the constraint — `cL` is admissible when `I(U;X)` is at least
   `I` of `zChan a`, and `cR` when `I(Y;V)` is at least that of `zChan d`;
@@ -149,7 +149,8 @@ noncomputable def jointUV (p : ℝ) (cL cR : Chan) (u v : Bool) : ℝ :=
 
 /-! ## The Z-channel -/
 
-/-- The Z-channel with interior atom `a`: input `false` never produces `true`. -/
+/-- The Z-channel with interior atom `a`: the crossover `P(U=1 | X=0)` vanishes,
+`tr false true = 0`. -/
 noncomputable def zChanTr (a : ℝ) (x u : Bool) : ℝ :=
   bif u then (bif x then 2 * a / (1 + a) else 0)
         else (bif x then (1 - a) / (1 + a) else 1)
