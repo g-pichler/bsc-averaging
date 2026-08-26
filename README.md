@@ -178,20 +178,21 @@ Solution:
 | Challenge | Solution | Theorem compared |
 | --- | --- | --- |
 | `Submission/MO285151/` | `Solutions/MO285151/` | `BSCAveraging.MO285151.averaged_bsc_maximise_mutual_information` |
+| `Submission/Conjecture1/` | `Solutions/Conjecture1/` | `BSCAveraging.DSIB.conjecture1_p0` |
 | `Submission/Conjecture2/` | `Solutions/Conjecture2/` | `BSCAveraging.DSIB.conjecture2_p0` |
 
-The two sit under different root components on purpose. Comparator exports the
+Challenge and Solution sit under different root components on purpose. Comparator exports the
 Challenge from a protected directory placed first on `LEAN_PATH`, and Lean
 resolves a module by its **root** component alone, so a Solution sharing the
 Challenge's root is looked for in that directory and not found — the failure
 reported as [PalomarSubmission issue 108](https://github.com/PalomarRegistry/PalomarSubmission/issues/108).
 
-**On this branch there is deliberately no configuration for Conjecture 1.**
-`conjecture1_p0_holds` is proved in `BSCAveraging/CFinish.lean` and remains part
-of the library — result 2 of the table above — but its Pólya certificate is
-checked by `native_decide`, so the theorem carries an auxiliary axiom and cannot
-meet Palomar's permitted-axiom rule. The two configurations that remain depend
-only on `propext`, `Classical.choice` and `Quot.sound`.
+**The Conjecture 1 configuration does not pass Comparator, and is kept anyway.**
+`conjecture1_p0_holds` reaches `native_decide` through its Pólya certificate, so
+the theorem carries an auxiliary axiom that Comparator rejects as a custom one;
+its `formalization.yaml` says so. It is ready for the day the certificate is
+checked by the kernel instead. The other two depend only on `propext`,
+`Classical.choice` and `Quot.sound`.
 
 Note that `BSCAveraging.Conj2` transitively imports `BSCAveraging.KernelCertFast`,
 so the `native_decide` is inside Conjecture 2's *import* closure. That is not a

@@ -5,6 +5,7 @@ One `Solution` per Challenge of `Submission/`, discharging its statement from
 the library:
 
 * `Solutions/MO285151/`    — `BSCAveraging.Main`;
+* `Solutions/Conjecture1/` — `BSCAveraging.CFinish`;
 * `Solutions/Conjecture2/` — `BSCAveraging.Conj2`.
 
 The Solutions sit under their own root component rather than beside their
