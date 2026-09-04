@@ -17,8 +17,8 @@ the Schur-type decomposition (`schur_decomposition`), its equal-weight case
 kernel on the face `u = 1`.
 
 The kernel lemma is not open: it is proved by the Pólya certificate of
-`KernelCertFast.lean` (`kerQ_nonneg_reflect`), computed by `PE.norm` and checked
-by `native_decide` — the one auxiliary axiom Conjecture 1 carries.
+`KernelCertFast.lean` (`kerQ_nonneg_reflect`), checked in the kernel by
+Kronecker substitution (`KernelKron.lean`) — no axiom beyond the standard three.
 
 See `NOTES.md` §7f. -/
 

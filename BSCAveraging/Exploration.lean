@@ -27,7 +27,6 @@ import BSCAveraging.Exploration.KernelAlgebra
 import BSCAveraging.Exploration.KernelBridge
 import BSCAveraging.Exploration.KernelCertBern
 import BSCAveraging.Exploration.KernelBridgeB
-import BSCAveraging.Exploration.KernelCertKron
 import BSCAveraging.Exploration.LogCosh
 import BSCAveraging.Exploration.PZero
 import BSCAveraging.Exploration.PZeroSymm
@@ -91,7 +90,6 @@ namespace BSCAveraging
 #print axioms Core.sweepC_sound
 #print axioms Reflect.kerBPE_allNonneg
 #print axioms Reflect.kernelSum_nonneg_B'
-#print axioms Reflect.Kron.digits_mask
 #print axioms Core.core_pos_regime2
 #print axioms Core.log_cosh_eq
 #print axioms Core.exp_dominates

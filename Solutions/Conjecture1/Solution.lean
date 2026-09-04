@@ -28,15 +28,13 @@ Four steps, over binary `U, V`:
 
 ## Computational content
 
-Step (C) uses two computed checks.  The 650-cell interval sweep of regime 2 of
-the core is checked by the Lean **kernel** (`BSCAveraging/CoreSweep.lean`).  The
-24129-monomial Pólya expansion of the kernel lemma is checked by
-`native_decide` (`BSCAveraging/KernelCertFast.lean`).  On Lean v4.32.0 that
-mints a per-declaration auxiliary axiom, so this theorem's axiom report reads
-`[propext, Classical.choice, Quot.sound,
-BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1]`.  Comparator
-rejects that as a custom axiom, so this Challenge/Solution pair does not yet meet
-Palomar's permitted-axiom rule.
+Step (C) uses two computed checks, both run by the Lean **kernel**.  The
+650-cell interval sweep of regime 2 of the core is `decide +kernel`
+(`BSCAveraging/CoreSweep.lean`).  The 24129-coefficient Pólya certificate of the
+kernel lemma is checked without being expanded: the syntax tree is evaluated at
+one big-integer Kronecker point and the coefficients are read off its base-`2^64`
+digits (`BSCAveraging/KernelKron.lean`, `KernelCertFast.lean`).  This theorem's
+axiom report reads `[propext, Classical.choice, Quot.sound]`.
 -/
 
 namespace BSCAveraging.DSIB

@@ -78,15 +78,15 @@ The two Entropy conjectures are proved by the same four steps, over binary
 
 ## Axioms
 
-Everything here is `sorry`-free.  `averaged_bsc_maximise_mutual_information`,
-`conjecture2_p0_holds` and all of `(A)`, `(B)`, `(D)` depend only on `propext`,
-`Classical.choice`, `Quot.sound`.  `conjecture1_p0_holds` additionally depends
-on exactly one further axiom, reached through `saddle_iii`: the 24129-monomial
-Pólya expansion of the kernel lemma, whose coefficient check runs under
-`native_decide`.  On Lean v4.32.0 `native_decide` mints a *per-declaration
-auxiliary axiom* rather than citing `Lean.ofReduceBool`, so the axiom report
-names it `BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1`.  The other computed step, the 650-cell interval sweep of
-regime 2 of the core, is checked by the **kernel** (`CoreSweep.lean`).
+Everything here is `sorry`-free, and every result — including
+`conjecture1_p0_holds` — depends only on `propext`, `Classical.choice`,
+`Quot.sound`.  Both computed steps of `saddle_iii` run in the Lean **kernel**:
+the 650-cell interval sweep of regime 2 of the core (`CoreSweep.lean`), and the
+24129-coefficient Pólya certificate of the kernel lemma, which is checked without
+ever being expanded, by evaluating its syntax tree at one big-integer Kronecker
+point and reading the coefficients off the digits (`KernelKron.lean`,
+`KernelCertFast.lean`).  Until that route was found the coefficient check ran
+under `native_decide` and Conjecture 1 carried one auxiliary axiom.
 
 ## Layout
 

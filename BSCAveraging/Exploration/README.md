@@ -75,11 +75,9 @@ Everything is in **nats** (natural logarithm). The source's "1 bit" is
 ## What is proved
 
 All `sorry`-free.  Every theorem depends only on `propext`, `Classical.choice`
-and `Quot.sound`, with a single exception: `conjecture1_p0_holds` additionally
-depends on one further axiom, because the Pólya certificate of the kernel lemma
-(`KernelCertFast.lean`, 24129 monomials) is checked by `native_decide`.  On Lean
-v4.32.0 that mints a per-declaration auxiliary axiom, `BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1`, rather than
-citing `Lean.ofReduceBool`.
+and `Quot.sound`.  (When this document was written `conjecture1_p0_holds` carried
+one further axiom, from the `native_decide` check of the Pólya certificate; that
+check is now done by the kernel, `KernelKron.lean`, see `NOTES.md` §7k.)
 All of this is checked by `#print axioms` in `Basic.lean`.
 
 Rows marked **†** are in `Exploration.lean`: proved, but *not* used by the main
@@ -238,7 +236,7 @@ is the last file of the Entropy 24(9):1321 chain.
 | `Assembly.lean` | bridge ⟹ domination ⟹ Hahn–Banach separation ⟹ the MO conjecture |
 | `BestResponse.lean` | the one-sided LP dual: a certificate `φ_T(s) ≤ λ₀+λ₁s+λ₂f_e(s)` bounds `I(U;V)` for **every** channel on that side (`NOTES.md` §7) |
 | `PZero.lean` | the `p = 0` certificates, both signs: the Z-channel is a global best response to the S-channel for the **max** (Conj 1) and the **min** (Conj 2) |
-| `Reflect.lean`, `KernelCertFast.lean` | polynomials as data, `PE.norm` and its soundness; the kernel lemma by reflection — 24129 monomials **computed** by Lean, one `native_decide` |
+| `Reflect.lean`, `KernelKron.lean`, `KernelCertFast.lean` | polynomials as data; the kernel lemma by reflection — its 24129 coefficients read off one big-integer Kronecker evaluation, checked by the kernel |
 | `KernelAlgebra.lean` | `zsRate`, `zsValue`, the Schur decomposition and the comonotone reduction |
 | `Conj12.lean` | the two conjectures as `Prop`s, the feasible sets, `maxExistsC`/`minExistsC`, `OptPairC`, the corner extraction and `cornerBound` |
 | `Interval.lean`, `CoreDeriv.lean`, `CoreSweep.lean`, `Regime1.lean`, `CorePos.lean` | the one-variable core `core_pos` in three regimes (interval arithmetic; the 650-cell sweep runs in the **kernel**, `decide +kernel`, and adds no axiom) |

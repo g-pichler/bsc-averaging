@@ -32,15 +32,14 @@ project:
     to relabelling the input alphabet, so what the two conjectures distinguish is the relative
     orientation of the two sides: anti-aligned for the maximum, aligned for the minimum.
     
-    The development is sorry-free and contains no hand-written axiom declaration.
-    `averaged_bsc_maximise_mutual_information` and `conjecture2_p0_holds` depend only on `propext`,
-    `Classical.choice` and `Quot.sound`. `conjecture1_p0_holds` additionally depends on exactly one
-    further axiom: the 24129-monomial Polya certificate of its kernel lemma is checked by
-    `native_decide`, which on Lean v4.32.0 mints a per-declaration auxiliary axiom
-    (BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1) rather than citing
-    `Lean.ofReduceBool`; that auxiliary axiom is a custom axiom in Comparator's sense. The other
-    computed step of that proof, a 650-cell interval sweep, is checked by the Lean kernel and adds
-    no axiom.
+    The development is sorry-free, contains no hand-written axiom declaration and uses no
+    `native_decide`. All three results -- `averaged_bsc_maximise_mutual_information`,
+    `conjecture1_p0_holds` and `conjecture2_p0_holds` -- depend only on `propext`,
+    `Classical.choice` and `Quot.sound`. The two computed steps of Conjecture 1 both run in the
+    Lean kernel: a 650-cell interval sweep, and the 24129-coefficient Polya certificate of the
+    kernel lemma, which is checked without being expanded by evaluating its syntax tree at one
+    big-integer Kronecker point and reading the coefficients off the digits
+    (BSCAveraging/KernelKron.lean).
     
     Scope, stated once for all three results. The channels are binary on both sides. For (1) this
     is the setting of the source question. For (2) and (3) it is a genuine restriction:
@@ -111,12 +110,10 @@ scope: |-
   the paper's Conjecture 1 states; (ii) binary U and V, the reduction to binary test channels
   (Dikshtein-Ordentlich-Shamai Proposition 3) being cited and not formalized, so the theorem read
   as a statement about R(Cu, Cv, 0) is conditional on it; (iii) optimality form, not uniqueness of the maximiser: the theorem says the Z/S
-  pair is not exceeded, not that it is the only maximiser; (iv) the theorem depends on one
-  further axiom, minted by the native_decide check of the 24129-monomial Polya certificate in
-  BSCAveraging/KernelCertFast.lean. On Lean v4.32.0 that is a per-declaration auxiliary axiom,
-  BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1, which Comparator rejects as a
-  custom axiom, so this configuration does not meet Palomar's permitted-axiom rule until the
-  certificate is checked by the Lean kernel instead.
+  pair is not exceeded, not that it is the only maximiser; (iv) both computed steps of the proof (a
+  650-cell interval sweep and the 24129-coefficient Polya certificate of the kernel lemma, the
+  latter checked by Kronecker substitution in BSCAveraging/KernelKron.lean) run in the Lean
+  kernel; the theorem's axioms are exactly propext, Classical.choice and Quot.sound.
 
 sources:
   - title: "Conjecture 1 of Dikshtein-Ordentlich-Shamai holds at p = 0 for binary test channels: no admissible pair exceeds the Z-channel/S-channel value"

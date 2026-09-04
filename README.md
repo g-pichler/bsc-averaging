@@ -12,13 +12,12 @@ is `Real.log 2`.
 | # | Result | Lean name | Axioms |
 | --- | --- | --- | --- |
 | 1 | MathOverflow 285151: `conv 𝒜 = conv ℬ` for every `p ∈ [0,1]` | `averaged_bsc_maximise_mutual_information` | standard |
-| 2 | Dikshtein–Ordentlich–Shamai, Conjecture 1, at `p = 0` | `conjecture1_p0_holds` | standard + one `native_decide` axiom |
+| 2 | Dikshtein–Ordentlich–Shamai, Conjecture 1, at `p = 0` | `conjecture1_p0_holds` | standard |
 | 3 | Dikshtein–Ordentlich–Shamai, Conjecture 2, at `p = 0` | `conjecture2_p0_holds` | standard |
 
 "standard" means `propext`, `Classical.choice`, `Quot.sound`. The whole
-development is `sorry`-free and contains no hand-written `axiom` declaration;
-the only non-standard axiom anywhere in it is the one `native_decide` mints for
-the Pólya certificate of result 2.
+development is `sorry`-free, contains no hand-written `axiom` declaration, and
+uses no `native_decide`: every computed step runs in the Lean kernel.
 
 ## 1. Averaged binary symmetric channels maximize mutual information
 
@@ -109,14 +108,15 @@ Stated once, for all three results.
   identity `I(U;V) = I(U;X) + I(V;X) − I(X;U,V)` that relates the two is the
   authors' own, stated as Remark 5 of the paper, but it is **not formalized
   here** — the Lean statement is the minimization form directly.
-* **One `native_decide` axiom in result 2.** `conjecture1_p0_holds` reaches
-  `native_decide` through the 24129-monomial Pólya certificate of its kernel
-  lemma (`BSCAveraging/KernelCertFast.lean`). On Lean v4.32.0 `native_decide`
-  mints a per-declaration auxiliary axiom rather than citing
-  `Lean.ofReduceBool`, so the axiom report names
-  `BSCAveraging.Reflect.kerQPE_allNonneg._native.native_decide.ax_1_1`. The other computed step of that
-  proof, the 650-cell interval sweep of regime 2 of the core, is checked by the
-  Lean **kernel** (`BSCAveraging/CoreSweep.lean`) and adds no axiom.
+* **Both computed steps of result 2 run in the kernel.** The 650-cell interval
+  sweep of regime 2 of the core is `decide +kernel` (`BSCAveraging/CoreSweep.lean`).
+  The 24129-coefficient Pólya certificate of the kernel lemma is never expanded:
+  its syntax tree is evaluated at one big-integer Kronecker point — GMP
+  arithmetic, which the kernel performs natively on `Nat` literals — and the
+  coefficients are read off the base-`2^64` digits, their non-negativity being a
+  single `land` against a mask (`BSCAveraging/KernelKron.lean`). About a second.
+  Until that route was found the check ran under `native_decide` and result 2
+  carried one auxiliary axiom.
 * **Two endpoints of result 1 were already known.** Pichler–Piantanida–Matz
   themselves note that Conjecture 5.2 holds at `p = 0`, from their Corollary 4.1
   and Proposition 4.3; and `p = 1/2` is degenerate, both regions collapsing to
@@ -148,7 +148,9 @@ BSCAveraging/
   Conj12.lean, Conj2.lean,
   CFinish.lean, ...          results 2 and 3
   CoreSweep.lean             the kernel-checked interval sweep
-  KernelCertFast.lean        the `native_decide` Pólya certificate
+  KernelKron.lean,
+  KernelCertFast.lean        the Pólya certificate, checked in the kernel by
+                             Kronecker substitution
   Exploration/               exploration, experiments and documentation, not used
                              in the final result
 Submission/                  the Palomar Challenges and their configurations
@@ -187,18 +189,11 @@ resolves a module by its **root** component alone, so a Solution sharing the
 Challenge's root is looked for in that directory and not found — the failure
 reported as [PalomarSubmission issue 108](https://github.com/PalomarRegistry/PalomarSubmission/issues/108).
 
-**The Conjecture 1 configuration does not pass Comparator, and is kept anyway.**
-`conjecture1_p0_holds` reaches `native_decide` through its Pólya certificate, so
-the theorem carries an auxiliary axiom that Comparator rejects as a custom one;
-its `formalization.yaml` says so. It is ready for the day the certificate is
-checked by the kernel instead. The other two depend only on `propext`,
-`Classical.choice` and `Quot.sound`.
-
-Note that `BSCAveraging.Conj2` transitively imports `BSCAveraging.KernelCertFast`,
-so the `native_decide` is inside Conjecture 2's *import* closure. That is not a
-dependency: `#print axioms BSCAveraging.DSIB.conjecture2_p0` reports exactly the
-three standard axioms. Comparator checks what a declaration depends on, not what
-the project happens to contain.
+All three configurations depend only on `propext`, `Classical.choice` and
+`Quot.sound`.  The Conjecture 1 configuration used to carry the auxiliary axiom
+that `native_decide` mints, which Comparator rejects as a custom one; since the
+certificate is checked by the kernel (`BSCAveraging/KernelKron.lean`) it no
+longer does.
 
 Each `Challenge.lean` is self-contained over Mathlib: it repeats verbatim the
 definitions its statement needs and states the theorem with `sorry`. Each

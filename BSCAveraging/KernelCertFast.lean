@@ -1,4 +1,5 @@
 import BSCAveraging.Reflect
+import BSCAveraging.KernelKron
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Tactic.Linarith
 
@@ -17,17 +18,20 @@ coefficient a positive integer.  `PE.eval_nonneg_of_norm` (proved in
 `Reflect.lean`, by induction, once and for all) turns that check into the real
 inequality.
 
-Cost of the check: one `native_decide`, i.e. compiled integer arithmetic.  That
-adds one axiom to this file — on Lean v4.32.0 `native_decide` mints a
-per-declaration auxiliary axiom, here
-`kerQPE_allNonneg._native.native_decide.ax_1_1`, rather than citing
-`Lean.ofReduceBool`.  The rest of the development
-stays at `[propext, Classical.choice, Quot.sound]`.  There is no axiom-clean
-alternative in the repository: the direct `ring` route described in the first
-paragraph was abandoned unfinished, so this `native_decide` is the only proof of
-`kerQPE_allNonneg` that exists here.
+**The check runs in the kernel, and it never expands anything.**  Expanding
+`kerQPE` in the kernel is hopeless — `6.8·10⁶` monomial products, tens of
+gigabytes of retained intermediates (`NOTES.md` §7i–§7j′) — and for a long time
+the coefficient check lived under `native_decide`, the one auxiliary axiom of
+the development.  `KernelKron.lean` replaces it by **Kronecker substitution**:
+the tree is evaluated at a single big-integer point, which the kernel does by
+GMP arithmetic on `Nat` literals, and the 24129 coefficients are read off the
+base-`2^64` digits of the result; non-negativity of all of them is one `land`
+against a mask.  The four `decide +kernel` facts below are that computation
+(about a second); `PE.eval_nonneg_of_kron` is the reflection principle that
+turns them into the inequality.  This file, and with it Conjecture 1, is at
+`[propext, Classical.choice, Quot.sound]`.
 
-See `NOTES.md` §7f‴. -/
+See `NOTES.md` §7f‴ and §7k. -/
 
 namespace BSCAveraging.Reflect
 
@@ -60,10 +64,23 @@ tree over the bi-simplex coordinates `t₁,t₂,t₃,t₄,s₁,s₂,s₃`.  With
 `wᵢ = TS²−ΘᵢUV`. -/
 def kerQPE : PE := .add (.add (term 0 1 2) (term 1 2 0)) (term 2 0 1)
 
-/-- **The Pólya certificate, computed.**  Every coefficient of the expansion of
-`kerQPE` is nonnegative.  24129 monomials; checked by compiled integer
-arithmetic. -/
-theorem kerQPE_allNonneg : kerQPE.norm.allNonneg = true := by native_decide
+/-- **The certificate, checked by the kernel in one big integer** (`KernelKron.lean`).
+The four facts below are the whole computation: the tree is bihomogeneous of
+bidegree `(12,12)` and has L1 bound below `2^63` (both structural, `decide`); its
+value at the Kronecker point is a non-negative integer (a few dozen GMP
+operations); and that integer has the top bit of every 64-bit digit clear — one
+`land` against the mask `2^63·(B^371293−1)/(B−1)`.  Together, by
+`PE.eval_nonneg_of_kron`, every one of the 24129 coefficients of the expansion is
+non-negative, without the expansion ever being formed. -/
+theorem kerQPE_bideg : kerQPE.bideg = some (12, 12) := by decide +kernel
+
+theorem kerQPE_l1b : kerQPE.l1b < 2 ^ 63 := by decide +kernel
+
+theorem kerQPE_kron_nonneg : 0 ≤ kerQPE.evalZ kron := by decide +kernel
+
+theorem kerQPE_kron_mask :
+    (kerQPE.evalZ kron).toNat &&& (2 ^ 63 * ((B ^ 371293 - 1) / (B - 1))) = 0 := by
+  decide +kernel
 
 /-- **The kernel lemma, cleared and ordered** — the reflection proof.  For
 nonnegative bi-simplex coordinates the cleared kernel is nonnegative. -/
@@ -71,15 +88,14 @@ theorem kerQ_nonneg_reflect {t₁ t₂ t₃ t₄ s₁ s₂ s₃ : ℝ}
     (h₁ : 0 ≤ t₁) (h₂ : 0 ≤ t₂) (h₃ : 0 ≤ t₃) (h₄ : 0 ≤ t₄)
     (k₁ : 0 ≤ s₁) (k₂ : 0 ≤ s₂) (k₃ : 0 ≤ s₃) :
     0 ≤ PE.eval ![t₁, t₂, t₃, t₄, s₁, s₂, s₃] kerQPE := by
-  refine PE.eval_nonneg_of_norm ?_ kerQPE kerQPE_allNonneg
+  refine PE.eval_nonneg_of_kron kerQPE kerQPE_bideg kerQPE_l1b kerQPE_kron_nonneg kerQPE_kron_mask ?_
   intro i
   fin_cases i <;> simpa using ‹_›
 
 /-- The syntax tree unfolds **definitionally** to the product form it encodes —
-no `ring`, no expansion.  This is what makes the reflection cheap: the only
-expensive object, the 24129-monomial expansion, is computed by `PE.norm` inside
-the kernel-checked `native_decide`, never written down or normalised by a
-tactic. -/
+no `ring`, no expansion.  This is what makes the reflection cheap: the
+24129-monomial expansion is never formed at all — its coefficients are read off
+one big integer (`KernelKron.lean`) — and nothing is normalised by a tactic. -/
 theorem eval_kerQPE (ρ : Fin 7 → ℝ) :
     PE.eval ρ kerQPE =
     ((ρ 0 + ρ 1 + (ρ 2 + ρ 3)) - ρ 0) * (((ρ 0 + ρ 1 + (ρ 2 + ρ 3)) * (ρ 4 + (ρ 5 + ρ 6)) - (ρ 0 + ρ 1) * (ρ 4 + ρ 5)) * ((ρ 0 + ρ 1 + (ρ 2 + ρ 3)) * (ρ 4 + (ρ 5 + ρ 6)) - (ρ 0 + ρ 1 + ρ 2) * (ρ 4 + ρ 5)))

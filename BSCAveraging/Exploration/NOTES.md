@@ -4622,8 +4622,26 @@ kernel retains every level of the recursion.
 * balanced base-`B` uniqueness, and `land mask = 0 → ∀ e, (N / B^e) % B < 2^63`
   (`Nat.testBit_land`, `Nat.testBit_two_pow`, `Nat.geomSum_eq` for `mask`).
 
-With those, `kerQPE_allNonneg` follows from `Kron.digits_mask`, and the
-development is at `[propext, Classical.choice, Quot.sound]` throughout.
+**Done** (`BSCAveraging/KernelKron.lean`, wired into `KernelCertFast.lean`).
+The glue went through `MvPolynomial` rather than through `Poly`/`norm`, which
+is never touched: `PE.toMv` with `PE.eval = aeval ∘ toMv` and `evalZ = eval ∘
+toMv`; a structural `PE.bideg` proved to give `IsWeightedHomogeneous` (weight
+`(1,0)` on `t`, `(0,1)` on `s`); a structural `PE.l1b` bounding every
+coefficient via the tree with subtractions replaced by additions (`PE.absMv`,
+non-negative coefficients, value at `(1,…,1)`); the Kronecker evaluation
+`eval kron P = Σ coeff d · B^{slot d}` with `slot` injective on bidegree
+`(12,12)` (`omega` on the base-13 digits); the balanced-digit lemma
+`digits_nonneg` peeling one digit at a time; and the mask lemma through
+`Nat.testBit_and`, `testBit_two_pow_add_eq/gt`, `testBit_mod_two_pow`,
+`testBit_div_two_pow`, with the mask's closed form `2^63·(B^L−1)/(B−1)` from a
+division-free geometric identity.  `PE.eval_nonneg_of_kron` takes four
+`decide +kernel` facts — `kerQPE.bideg = some (12,12)`, `kerQPE.l1b < 2^63`,
+`0 ≤ kerQPE.evalZ kron`, and the `land` — and `kerQ_nonneg_reflect` uses it in
+place of `PE.eval_nonneg_of_norm`; `kerQPE_allNonneg` and its `native_decide`
+are gone.  `KernelCertFast.lean` builds in **2.4 s** (was 138 s), and
+`conjecture1_p0_holds` reports `[propext, Classical.choice, Quot.sound]`.  The
+only `native_decide` left in the repository is `kerBPE_allNonneg` under
+`Exploration/`, which nothing depends on.
 
 ### 7l. Could (C) be replaced by a global comparison, or by a path? — no shortcut
 
