@@ -4569,6 +4569,214 @@ over `θ = s²` with `s ∈ [0,1]`.  The fix is a continuity argument — the ke
 sum is continuous in a scaling parameter `c ↑ 1` applied to all three `θᵢ`, and
 the denominators stay away from zero — not a new obstruction, just work.
 
+### 7k. The certificate in one big integer — kernel-checkable after all
+
+`Exploration/KernelCertKron.lean`.  §7i–§7j′ all tried to do *symbolic*
+polynomial arithmetic in the kernel and were killed by retained intermediates
+(30–89 GB expansion, >43 GB `ring`, the cyclic sum unsplittable).  None used the
+one thing the kernel does fast: GMP arithmetic on `Nat` literals.  On v4.32.0
+`Nat.pow`, `mul`, `sub`, `div`, `mod`, `land`, `ble` on literals all reduce in
+the kernel by GMP (`pow` with exponent `< 2^24`) — a 12-fold product of 2 MB
+numbers, a `pow` to `371292`, and a `land` against a 20 Mbit mask check in
+0.3 s.
+
+**Kronecker substitution.**  Never expand.  Dehomogenise (`t₄ = s₃ = 1`) and
+evaluate the tree `kerQPE` at
+
+```
+(t₁,t₂,t₃,t₄,s₁,s₂,s₃) = (B, B^13, B^169, 1, B^2197, B^28561, 1),   B = 2^64.
+```
+
+Bidegree `(12,12)` puts every exponent of `t₁,t₂,t₃,s₁,s₂` at `≤ 12`, so the
+exponent vector maps injectively to the slot `e₁+13e₂+169e₃+2197e₅+28561e₆ <
+371293`, and the value `N` is the coefficient vector in base `B`.  The
+structural L1 bound of the tree (products and sums of the factors' L1 norms,
+no expansion) is `1667733694599168 < 2^51 < B/2`, so no digit overflows or
+borrows, and by balanced-representation uniqueness
+
+> all coefficients `≥ 0`  ⟺  every 64-bit digit has top bit `0`
+> ⟺  `N.land mask = 0`,  `mask = 2^63·(B^371293−1)/(B−1)`.
+
+**Measured.**
+
+| | wall (incl. 2.7 s import) | peak RSS over the 1.66 GB import |
+| --- | --- | --- |
+| evaluate the product form at the point, `0 ≤ N`, `N < B^371293` | 2.7 s | — |
+| **`N.land mask = 0`** — the certificate | **3.3 s** | **+230 MB** |
+| divide-and-conquer digit scan instead of the mask | 72 s | 14 GB |
+| `native_decide` on `kerQPE.norm.allNonneg` (`KernelCertFast.lean`) | 138 s | — |
+
+Negative control: a leaf threshold of `2^26`, below the largest coefficient
+`74 216 288`, fails.  Not the 7-variable homogeneous version: `13^7` slots is a
+500 MB number and the `pow` exponent exceeds `2^24`.  Not the D&C scan: the
+kernel retains every level of the recursion.
+
+**What is missing is glue, not computation** (a few hundred lines, no research):
+
+* `evalZ` versus `PE.eval` under the cast `ℤ → ℝ`, and `Poly.eval` likewise, so
+  `PE.eval_norm` transfers to `ℤ`;
+* structural `PE.l1bound : PE → ℕ` and `PE.bideg : PE → Option (ℕ × ℕ)` with
+  lemmas that `PE.norm` respects them through `collect` (permutation, merge of
+  equal keys), `cmul` (`M7.mul` adds exponents, L1 submultiplicative), `cpow`,
+  `neg`, `++`; `decide` then computes `kerQPE.l1bound` and `kerQPE.bideg`;
+* balanced base-`B` uniqueness, and `land mask = 0 → ∀ e, (N / B^e) % B < 2^63`
+  (`Nat.testBit_land`, `Nat.testBit_two_pow`, `Nat.geomSum_eq` for `mask`).
+
+With those, `kerQPE_allNonneg` follows from `Kron.digits_mask`, and the
+development is at `[propext, Classical.choice, Quot.sound]` throughout.
+
+### 7l. Could (C) be replaced by a global comparison, or by a path? — no shortcut
+
+`numerics/corner_path.py`.  Steps (A), (B), (D) leave an optimiser in {BSC
+pair, corner, degenerate}.  So (C) — the BSC pair is a saddle — could be
+replaced by the **global** statement
+
+> `V(BSC_s, BSC_t) ≤ V(Z_a, S_d)` whenever the rates agree, `f_e(s) = R_Z(a)`,
+> `f_e(t) = R_Z(d)` (and `≥ V(Z_a, Z_d)` for the minimum):
+
+a BSC optimiser would then be matched by a feasible corner, and the whole of
+§4.3–§4.4 (Hessian, second-order KKT, kernel lemma and its certificate, the
+core inequality with its three regimes and the 650-cell sweep) would go.
+
+**The inequality is true, numerically, with clean slack.**  On a 199×199 grid,
+both directions, no violation.  `V_ZS/V_BSC − 1` is about `4.1 %` for small
+biases (not a moment effect: `V_ZS ≈ ad` against `V_BSC ≈ ½s²t²` with
+`a ≈ r/ln 2`, `s² ≈ 2r`, ratio `1/(2 ln²2) = 1.0407`) and tends to `0` only at
+`(s,t) → (1,1)`, linearly: `1.2·10⁻³` at `1−s = 10⁻²`, `9.7·10⁻⁵` at `10⁻³`.
+`V_ZZ/V_BSC` runs from `0.40` to `1`.
+
+**It does not decompose into one-sided steps.**  The natural proof would be two
+LP-certificate steps of the kind in §4.5: (1) fix `V = BSC_t`, replace `BSC_s`
+by `Z_a` at equal rate; (2) fix `U = Z_a`, replace `BSC_t` by `S_d` — step (2)
+is the corner theorem.  Step (1) is **false**:
+
+```
+V(Z_a, BSC_t) / V(BSC_s, BSC_t) at equal rate:  0.72 … 0.97, always < 1
+```
+
+Against a fixed BSC the corner is *worse*, which is `F_pp < 0` of the Hessian
+lemma: along either side alone, at fixed rate, the BSC is a local maximum.  The
+corner only wins when both sides skew, in opposite directions, and that gain
+is the off-diagonal `F_pq`.  The comparison is the saddle stated globally.
+
+**The path.**  Move both sides at once: keep each side a mean-zero two-atom
+law, move its centre linearly, `p = ℓ(a−1)/2`, `q = ℓ(1−d)/2`, and solve the
+half-gap from the fixed rate.  `ℓ = 0` is the BSC pair, `ℓ = 1` is exactly
+`(Z_a, S_d)`.  Along it `V(ℓ)` is **monotone and convex at all 361 grid points
+(21 steps each)**, with `V'(0) = 0` and most of the gain in the last tenth:
+
+```
+s=t=0.5   V(ℓ)/V(0):  1.0000 1.0001 1.0004 1.0008 1.0016 1.0027 1.0043 1.0068 1.0107 1.0178 1.0396
+```
+
+Two things a proof along the path would have to contain:
+
+* `V'(0) = 0` by parity, so positivity near `ℓ = 0` is again the quadratic
+  form of Lemma 4.8, in the *specific* direction `((a−1)/2, (1−d)/2)`:
+  `V''(0)/V(0) ≈ 4·10⁻⁴`, small because that direction is far from the
+  optimal `(1, −F_pq/F_qq)`, and implicit in `a, d`.  The path fixes which
+  direction to check; it does not remove the Hessian.
+* Away from `0` the gain is a **race**, not a monotone quantity.  Splitting
+  `V = E f_e(ST) + E f_o(ST)` along the path at `s = t = ½`:
+
+  ```
+  ℓ     even/V₀   odd/V₀
+  0.0   1.0000   +0.0000
+  0.4   0.9653   +0.0363
+  0.8   0.8657   +0.1450
+  1.0   0.7862   +0.2535
+  ```
+
+  the even part falls 21 %, the odd gain `Ω` rises 25 %, net `+4 %`.  So
+  monotonicity is "`Ω` outruns the even loss everywhere on the path, for every
+  `(s,t)`" — a three-parameter inequality with an implicit endpoint.  §3's
+  tools bound `Ω` from *above* for opposite skews; here one needs a lower bound
+  on `Ω'` beating an explicit even-part loss.
+
+**Without the rate constraint there is no path.**  Interpolating the atoms
+linearly to the corner, `s₁ = (1−ℓ)s + ℓa`, `s₂ = −(1−ℓ)s − ℓ`, weights from
+mean zero, and ignoring the intermediate rates: the intermediate laws have much
+larger gaps, hence much larger value, and `V(ℓ)` overshoots and comes back —
+`×9.5` at `s = t = 0.1` — or dips *below* `V(0)` in the middle (`s = t = 0.9`,
+minimum `0.979`).  Non-monotone at all 1521 grid points.  Holding the rates is
+what makes the path monotone; drop it and there is nothing to prove along it.
+
+**Is convexity along the path provable?**  Three measurements say where such a
+proof would have to be hard (`corner_path.py` (3c)):
+
+* `V''(ℓ)/V(0)` is smallest at `ℓ = 0` everywhere and grows by two to three
+  orders toward `ℓ = 1` (`s = t = 0.1`: `1.1·10⁻³` at `ℓ = .05`, `3.5` at
+  `.95`).  The binding point is the Hessian at the BSC.
+* At `ℓ = 0` the claim is that the path direction `((a−1)/2, (1−d)/2)` lies
+  *inside* the positive cone of the indefinite form — strictly more than the
+  saddle inequality, which says the cone is nonempty.  For `s = t` the
+  direction is the cone's axis, the best possible, and the margin
+  `Q/(|F_pp|p₁² + |F_qq|q₁²)` still vanishes like `s²` because the cone
+  collapses: `(0.974, 1.026)` and `+0.0003` at `s = t = 0.05`, `(0.756, 1.322)`
+  and `+0.039` at `0.5`.  Intrinsic, not a bad path: at small bias every law at
+  equal rate ties to leading order, `V ≈ ½E S²E T²`, and the direction is
+  implicit in `R_Z⁻¹`.  So the `ℓ = 0` piece is a sixth-order-in-bias
+  inequality with an implicit direction: what the kernel lemma proves, plus
+  more.  It cannot cost less than the certificate.
+* `V'(ℓ)/V(0)` diverges logarithmically as `ℓ → 1` — the atom reaching `−1`,
+  `f'(z) = 1 + ln(1+z)` — harmless for convexity, one more thing to handle.
+
+The path *creates* the degeneracy: the global comparison has a zero-order 4 %
+gap at small bias exactly where the path is flat to sixth order.  Its only thin
+region is `(s,t) → (1,1)`, slack `≈ 0.1·(1−s)`.  If anything replaces (C)
+analytically it is the global inequality attacked directly — perturbation at
+`(1,1)` plus the bulk — not convexity along a path through the BSC.
+
+**How a direct attack on the global comparison would go** (`corner_path.py`
+(3d)).  Write `Δ(s,t) = V_ZS(a(s),d(t)) − f_e(st)` with `a = R_Z⁻¹∘f_e`.
+
+* *Where it is thin.*  Not the diagonal — there the relative slack is largest,
+  `≈ 4 %` — but the **edges** `s = 1` and `t = 1`, where it vanishes
+  identically: at `s = 1` the U-side is noiseless in both pairs (`BSC₁ = Z₁`),
+  so both values equal the V-rate.  Along `st = x` the minimum is at
+  `s → 1` for every `x`.  So there is no diagonal reduction; the critical set is
+  the boundary.
+* *The edge is first-order regular.*  Both values are regular in `(σ, α)`,
+  `s = 1−σ`, `a = 1−α`; the only singular object is the rate inversion,
+  `(σ/2)ln(2/σ) ≈ (α/4)ln(2/α)`, so `α/σ → 2` with `1/ln(1/σ)` corrections
+  (`2.26` at `σ = 0.1`, `2.10` at `10⁻⁶`).  Hence
+
+  ```
+  Δ/(σ·V_BSC) = [ t·artanh t − (α/σ)·∂ₐV_ZS(1,d) ] / f_e(t) + O(σ),
+  ```
+
+  verified against the observed slope to three digits for `σ ≤ 10⁻³`
+  (`0.414/0.414`, `0.449/0.449`), and the limit coefficient
+  `c(t) = [t·artanh t − 2∂ₐV_ZS(1,d(t))]/f_e(t)` is `0.56 … 0.60` on all of
+  `(0,1)` — positive with margin, nearly constant.  The finite-`σ` slope is
+  smaller (`0.21` at `σ = 0.1`) only because `α/σ > 2`.
+* *The corner is doubly degenerate.*  At `s = t = 1−σ` the `O(σ)` term cancels
+  and `Δ/V_BSC ≈ ln 2 · σ/ln(1/σ)` (`slack/σ · ln(1/σ) → 0.69`).  A proof there
+  needs the log-correction of the inversion exactly.
+* *The bulk is not crude-boundable.*  The explicit `a ≥ f_e(s)/ln 2` (from
+  `R_Z(a) ≤ a ln 2`, exact at `s = 1`) loses `13 %` at `s ≈ 0.87` against a
+  true slack of `1 %`: `1 − a ≈ 2σ` while `1 − f_e(s)/ln 2 ≈ (σ/2ln 2)ln(2/σ)`.
+  Bounds accurate to first order with log terms are needed; `R_Z` is concave on
+  `(0, 0.45)` and convex after, so one-sided Newton bounds change side.
+* *The minimum side is easier*: at the edge `(V_BSC − V_ZZ)/V_BSC ≈ σ ln(1/σ)`,
+  the log does not cancel.
+
+So a proof would be: (i) an edge strip `σ ≤ σ₀` by the first-order expansion
+with a rigorous remainder and explicit two-sided bounds on `α(σ)` carrying the
+log term; (ii) a corner box by the double expansion; (iii) the bulk
+`s,t ≤ 1−σ₀`, slack `≳ 0.2σ₀`, by sharper explicit bounds on `a(s)` and then
+either an analytic argument nobody has or a kernel-checked 2-D sweep.  Not
+shorter than §4.3–§4.4, and the axiom it would remove is already removable by
+§7k.  Worth doing only if (iii) turns out to have an analytic proof.
+
+**Verdict.**  Right way to see *why* the corner wins — anti-aligned skew buys
+odd gain faster than it loses even value — and convexity in `ℓ` with
+`V'(0) = 0` would be the cleanest single hypothesis (one second-order statement
+along the whole path, of which Lemma 4.8 is the `ℓ = 0` case).  But it is a
+different, unproved route to the same place, not a reduction: the local piece
+is the Hessian in a worse direction, the global piece a quantitative race.  (C)
+stays.
+
 ### 7f. The saddle inequality (iii) — proved
 
 `(iii)` is the last analytic step of Conjecture 1 at `p = 0`:
