@@ -16,16 +16,15 @@ rev = "81a5d257c8e410db227a6665ed08f64fea08e997"
 [[lean_lib]]
 name = "BSCAveraging"
 
-# The Palomar Challenges.  Each is self-contained and imports Mathlib only.
+# The Palomar Challenge: one module stating all three theorems, self-contained
+# and importing Mathlib only.
 [[lean_lib]]
 name = "Submission"
-globs = ["Submission.+"]
 
-# The Solutions, each importing the one library module that discharges its
-# Challenge.  They sit under their own root component: Comparator puts the
-# protected Challenge directory first on `LEAN_PATH`, and Lean resolves a module
-# by its root component alone, so a Solution sharing the Challenge's root is
-# looked for in that directory and not found (PalomarSubmission issue 108).
+# The Solution, discharging all three from the library.  It sits under its own
+# root component: Comparator puts the protected Challenge directory first on
+# `LEAN_PATH`, and Lean resolves a module by its root component alone, so a
+# Solution sharing the Challenge's root is looked for in that directory and not
+# found (PalomarSubmission issue 108).
 [[lean_lib]]
 name = "Solutions"
-globs = ["Solutions.+"]

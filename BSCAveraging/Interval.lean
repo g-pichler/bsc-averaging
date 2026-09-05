@@ -9,7 +9,7 @@ import Mathlib.Tactic.Positivity
 
 `NOTES.md` §7f⁷: the last computational ingredient of `(C)` is inequality
 (iii)'s one-variable core, `1/log Z − 1/(Z−1) > tanh θ/(2θ)` with `Z = cosh 2θ`,
-which on the middle regime is established by a sweep over 650 cells
+which on the middle regime is established by a sweep over 88 cells
 (`CoreSweep.lean`).  Doing
 that in Lean by writing the cells out as terms is hopeless — the same lesson as
 the kernel certificate (`Reflect.lean`): encode the computation as **data** and

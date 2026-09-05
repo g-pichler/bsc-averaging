@@ -81,7 +81,7 @@ The two Entropy conjectures are proved by the same four steps, over binary
 Everything here is `sorry`-free, and every result — including
 `conjecture1_p0_holds` — depends only on `propext`, `Classical.choice`,
 `Quot.sound`.  Both computed steps of `saddle_iii` run in the Lean **kernel**:
-the 650-cell interval sweep of regime 2 of the core (`CoreSweep.lean`), and the
+the 88-cell interval sweep of regime 2 of the core (`CoreSweep.lean`), and the
 24129-coefficient Pólya certificate of the kernel lemma, which is checked without
 ever being expanded, by evaluating its syntax tree at one big-integer Kronecker
 point and reading the coefficients off the digits (`KernelKron.lean`,

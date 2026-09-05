@@ -108,7 +108,7 @@ Stated once, for all three results.
   identity `I(U;V) = I(U;X) + I(V;X) − I(X;U,V)` that relates the two is the
   authors' own, stated as Remark 5 of the paper, but it is **not formalized
   here** — the Lean statement is the minimization form directly.
-* **Both computed steps of result 2 run in the kernel.** The 650-cell interval
+* **Both computed steps of result 2 run in the kernel.** The 88-cell interval
   sweep of regime 2 of the core is `decide +kernel` (`BSCAveraging/CoreSweep.lean`).
   The 24129-coefficient Pólya certificate of the kernel lemma is never expanded:
   its syntax tree is evaluated at one big-integer Kronecker point — GMP
@@ -153,8 +153,10 @@ BSCAveraging/
                              Kronecker substitution
   Exploration/               exploration, experiments and documentation, not used
                              in the final result
-Submission/                  the Palomar Challenges and their configurations
-Solutions/                   the matching Solutions, under their own root
+Submission.lean              the Palomar Challenge: all three statements
+Solutions.lean               the matching Solution, under its own root
+comparator.json,
+formalization.yaml           the Comparator configuration and its metadata
 ```
 
 `BSCAveraging/Exploration/NOTES.md` is a working record written as the attack 
@@ -173,15 +175,16 @@ Requires the pinned Lean and Mathlib in `lean-toolchain` and `lakefile.toml`.
 
 ## Submission modules
 
-`Submission/` holds one Challenge per submitted result, with its Comparator
-configuration and its `formalization.yaml`; `Solutions/` holds the matching
-Solution:
+`Submission.lean` is the Challenge and `Solutions.lean` the matching Solution;
+`comparator.json` and `formalization.yaml` beside them are the single Comparator
+configuration. One configuration selecting several declarations is verified and
+reviewed as a whole, so all three results are submitted as one entry:
 
-| Challenge | Solution | Theorem compared |
-| --- | --- | --- |
-| `Submission/MO285151/` | `Solutions/MO285151/` | `BSCAveraging.MO285151.averaged_bsc_maximise_mutual_information` |
-| `Submission/Conjecture1/` | `Solutions/Conjecture1/` | `BSCAveraging.DSIB.conjecture1_p0` |
-| `Submission/Conjecture2/` | `Solutions/Conjecture2/` | `BSCAveraging.DSIB.conjecture2_p0` |
+| Theorem compared | Discharged from |
+| --- | --- |
+| `BSCAveraging.MO285151.averaged_bsc_maximise_mutual_information` | `BSCAveraging.Main` |
+| `BSCAveraging.DSIB.conjecture1_p0` | `BSCAveraging.CFinish` |
+| `BSCAveraging.DSIB.conjecture2_p0` | `BSCAveraging.Conj2` |
 
 Challenge and Solution sit under different root components on purpose. Comparator exports the
 Challenge from a protected directory placed first on `LEAN_PATH`, and Lean
@@ -189,18 +192,18 @@ resolves a module by its **root** component alone, so a Solution sharing the
 Challenge's root is looked for in that directory and not found — the failure
 reported as [PalomarSubmission issue 108](https://github.com/PalomarRegistry/PalomarSubmission/issues/108).
 
-All three configurations depend only on `propext`, `Classical.choice` and
-`Quot.sound`.  The Conjecture 1 configuration used to carry the auxiliary axiom
-that `native_decide` mints, which Comparator rejects as a custom one; since the
+All three theorems depend only on `propext`, `Classical.choice` and
+`Quot.sound`.  Conjecture 1 used to carry the auxiliary axiom that
+`native_decide` mints, which Comparator rejects as a custom one; since the
 certificate is checked by the kernel (`BSCAveraging/KernelKron.lean`) it no
 longer does.
 
-Each `Challenge.lean` is self-contained over Mathlib: it repeats verbatim the
-definitions its statement needs and states the theorem with `sorry`. Each
-`Solution.lean` imports the one library module it needs — `BSCAveraging.Main`,
-`BSCAveraging.CFinish` and `BSCAveraging.Conj2` respectively — and discharges it.
-The Challenge module documentation carries the mathematical account of that one
-result.
+`Submission.lean` is self-contained over Mathlib: it repeats verbatim the
+definitions the three statements need — the common core, the two regions, and
+the Z- and S-channels — and states each theorem with `sorry`. `Solutions.lean`
+imports `BSCAveraging.Main`, `BSCAveraging.CFinish` and `BSCAveraging.Conj2` and
+discharges all three. The Challenge module documentation carries the
+mathematical account of the three results.
 
 ## Licence
 

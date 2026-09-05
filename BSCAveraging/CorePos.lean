@@ -7,7 +7,7 @@ import BSCAveraging.CoreSweep
 
 * `(0, 0.45]` — `core_pos_regime1`, by the log-free reduction plus a polynomial
   certificate (`Regime1.lean`);
-* `[0.45, 3]` — `core_pos_regime2`, by the centred interval sweep over 650 cells
+* `[0.45, 3]` — `core_pos_regime2`, by the centred interval sweep over 88 cells
   (`CoreSweep.lean`);
 * `[3, ∞)` — `core_pos_regime3`, by elementary exponential bounds
   (`CoreDeriv.lean`).
