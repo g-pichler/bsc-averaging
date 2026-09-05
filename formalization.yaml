@@ -3,17 +3,17 @@ version: v0.4
 project:
   name: BSCAveraging
   description: |-
-    Three theorems about binary channels on a doubly symmetric binary source: a pair (X, Y) of
-    Bernoulli(1/2) bits with P(X ≠ Y) = p, together with Markov chains U - X - Y - V in which U
-    and V are the outputs of two independent binary channels applied to X and to Y. Let 𝒜 be the set
-    of rate triples (R0, R1, R2) with I(U;X) ≤ R1, I(Y;V) ≤ R2 and R0 ≤ I(U;V) attainable by
-    arbitrary binary channels on the two sides, and ℬ the same set with both channels restricted to
-    be binary symmetric.
+    Three theorems about binary channels on a doubly symmetric binary source: a pair (𝑋, 𝑌) of
+    Bernoulli(1/2) bits with P(𝑋 ≠ 𝑌) = 𝑝, together with Markov chains 𝑈 - 𝑋 - 𝑌 - 𝑉 in which 𝑈
+    and 𝑉 are the outputs of two independent binary channels applied to 𝑋 and to 𝑌. Let 𝒜 be the
+    set of rate triples (𝑅₀, 𝑅₁, 𝑅₂) with 𝐼(𝑈;𝑋) ≤ 𝑅₁, 𝐼(𝑌;𝑉) ≤ 𝑅₂ and 𝑅₀ ≤ 𝐼(𝑈;𝑉) attainable by
+    arbitrary binary channels on the two sides, and ℬ the same set with both channels restricted
+    to be binary symmetric.
 
-    (1) conv 𝒜 = conv ℬ for every p in [0,1]. (2) At p = 0, no pair of binary channels whose
-    rates do not exceed those of the Z-channel with parameter 𝑎 and the S-channel with parameter
-    𝑑 attains a larger I(U;V) than that pair does. (3) At p = 0, no pair of binary channels whose
-    rates are at least those of the Z-channels with parameters 𝑎 and 𝑑 attains a smaller I(U;V)
+    (1) conv 𝒜 = conv ℬ for every 𝑝 in [0,1]. (2) At 𝑝 = 0, no pair of binary channels whose rates
+    do not exceed those of the Z-channel with parameter 𝑎 and the S-channel with parameter 𝑑
+    attains a larger 𝐼(𝑈;𝑉) than that pair does. (3) At 𝑝 = 0, no pair of binary channels whose
+    rates are at least those of the Z-channels with parameters 𝑎 and 𝑑 attains a smaller 𝐼(𝑈;𝑉)
     than that pair does. Here 𝑎, 𝑑 range over (0,1).
   authors:
     - Georg Pichler
@@ -53,16 +53,16 @@ review:
     recorded citing work, a 2024 Entropy editorial that mentions the setting but not the
     conjectures, and no resolution of either conjecture was found. Mathlib at the pinned revision
     contains no mutual information at all, and no prior Lean formalization of any of the three
-    problems was found. That search is the authors' own and is not offered as evidence of
+    problems was found. That search is the author's own and is not offered as evidence of
     priority.
 
 scope: |-
   This configuration selects all three theorems of the development:
   BSCAveraging.MO285151.averaged_bsc_maximise_mutual_information,
   BSCAveraging.DSIB.conjecture1_p0 and BSCAveraging.DSIB.conjecture2_p0. Known gaps and
-  restrictions: (i) the two conjecture theorems hold at p = 0 only, the only case the paper states
-  them for; (ii) binary U and V throughout, the reduction to binary test channels
-  (Dikshtein-Ordentlich-Shamai Proposition 3) being cited and not formalized, so the two
+  restrictions: (i) the two conjecture theorems hold at p = 0 only, the only case the
+  Dikshtein-Ordentlich-Shamai paper states them for; (ii) binary U and V throughout, the
+  reduction to binary test channels (Proposition 3 of that paper) being cited and not formalized, so the two
   conjecture theorems read as statements about R(Cu, Cv, 0) are conditional on it, while for
   MathOverflow 285151 the binary restriction is the setting of the source question and costs
   nothing; (iii) optimality form, not uniqueness of the optimiser: the conjecture theorems say the

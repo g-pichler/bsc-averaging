@@ -941,12 +941,6 @@ f_e(s·t) < zsValue a d      whenever  f_e(s) ≤ zsRate a  and  f_e(t) ≤ zsRa
 That is `BranchGap`.  The reduction is `bscNotMax_of_branchGap`, proved here; it
 needs the Z-channel as a `Chan`, its rate, and its value against the S-channel. -/
 
-/-- The Z-channel with interior atom `a`: the crossover `P(U=1 | X=0)` vanishes,
-`tr false true = 0`. -/
-noncomputable def zChanTr (a : ℝ) (x u : Bool) : ℝ :=
-  bif u then (bif x then 2 * a / (1 + a) else 0)
-        else (bif x then (1 - a) / (1 + a) else 1)
-
 /-- The Z-channel with parameter `a ∈ (0,1)`. -/
 noncomputable def zChan (a : ℝ) (ha0 : 0 < a) (ha1 : a < 1) : Chan where
   tr := zChanTr a

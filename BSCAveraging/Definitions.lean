@@ -167,4 +167,15 @@ noncomputable def fe (y : ℝ) : ℝ := ((1 + y) * log (1 + y) + (1 - y) * log (
 /-- The rate of a Z-channel with interior atom `a`: `(f_e(a) + a·log 2)/(1+a)`. -/
 noncomputable def zsRate (a : ℝ) : ℝ := (fe a + a * log 2) / (1 + a)
 
+/-- The Z-channel with interior atom `a`: the crossover `P(U=1 | X=0)` vanishes,
+`tr false true = 0`.
+
+Defined here rather than beside `zChan` in `Conj12.lean` so that the `2` of
+`2 * a` takes its `Nat.AtLeastTwo` witness from `dsbs`, as it does in the
+Palomar Challenge, which is one self-contained module.  Comparator compares
+constants, and that witness is a module-local auxiliary. -/
+noncomputable def zChanTr (a : ℝ) (x u : Bool) : ℝ :=
+  bif u then (bif x then 2 * a / (1 + a) else 0)
+        else (bif x then (1 - a) / (1 + a) else 1)
+
 end BSCAveraging
