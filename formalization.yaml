@@ -4,9 +4,9 @@ project:
   name: BSCAveraging
   description: |-
     Three theorems about binary channels on a doubly symmetric binary source: a pair (X, Y) of
-    Bernoulli(1/2) bits with P(X != Y) = p, together with Markov chains U - X - Y - V in which U
+    Bernoulli(1/2) bits with P(X ≠ Y) = p, together with Markov chains U - X - Y - V in which U
     and V are the outputs of two independent binary channels applied to X and to Y. Let 𝒜 be the set
-    of rate triples (R0, R1, R2) with I(U;X) <= R1, I(Y;V) <= R2 and R0 <= I(U;V) attainable by
+    of rate triples (R0, R1, R2) with I(U;X) ≤ R1, I(Y;V) ≤ R2 and R0 ≤ I(U;V) attainable by
     arbitrary binary channels on the two sides, and ℬ the same set with both channels restricted to
     be binary symmetric.
 
