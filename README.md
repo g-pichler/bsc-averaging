@@ -155,8 +155,10 @@ BSCAveraging/
                              in the final result
 Submission.lean              the Palomar Challenge: all three statements
 Solutions.lean               the matching Solution, under its own root
-comparator.json,
-formalization.yaml           the Comparator configuration and its metadata
+Submission/MO285151/
+  comparator.json            the Comparator configuration (see the README beside
+                             it for why it sits there)
+formalization.yaml           its metadata
 ```
 
 `BSCAveraging/Exploration/NOTES.md` is a working record written as the attack 
@@ -176,8 +178,9 @@ Requires the pinned Lean and Mathlib in `lean-toolchain` and `lakefile.toml`.
 ## Submission modules
 
 `Submission.lean` is the Challenge and `Solutions.lean` the matching Solution;
-`comparator.json` and `formalization.yaml` beside them are the single Comparator
-configuration. One configuration selecting several declarations is verified and
+`Submission/MO285151/comparator.json` and `formalization.yaml` are the single
+Comparator configuration and its metadata. The configuration path is fixed by the
+registry entry it updates, as `Submission/MO285151/README.md` explains. One configuration selecting several declarations is verified and
 reviewed as a whole, so all three results are submitted as one entry:
 
 | Theorem compared | Discharged from |
